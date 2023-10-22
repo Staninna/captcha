@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use super::{CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
 use image::Rgba;
 use imageproc::{definitions::Image, drawing::draw_text};
@@ -14,6 +16,9 @@ use uuid::Uuid;
 pub struct Captcha {
     code: String,
     image_id: String,
+
+    // DEBUG: Remove this field
+    image_path: PathBuf,
 }
 
 impl Captcha {
@@ -23,9 +28,13 @@ impl Captcha {
 
         let image = Self::gen_img(&Self::gen_code(length));
 
-        Self::save_img(&image, &image_id, temp_dir);
+        let image_path = Self::save_img(&image, &image_id, temp_dir);
 
-        Self { code, image_id }
+        Self {
+            code,
+            image_id,
+            image_path,
+        }
     }
 }
 
@@ -91,8 +100,9 @@ impl Captcha {
         image
     }
 
-    fn save_img(image: &Image<Rgba<u8>>, image_id: &str, temp_dir: &TempDir) {
+    fn save_img(image: &Image<Rgba<u8>>, image_id: &str, temp_dir: &TempDir) -> PathBuf {
         let file_path = temp_dir.path().join(image_id.to_string() + ".png");
         image.save(&file_path).unwrap();
+        file_path
     }
 }
