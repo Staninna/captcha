@@ -120,6 +120,7 @@ async fn delete_captcha_by_id(
     let file_path = temp_dir.path().join(id.to_string() + ".png");
     std::fs::remove_file(file_path)
 }
+
 #[get("/help")]
 pub async fn help() -> &'static str {
     "API v1 Documentation
