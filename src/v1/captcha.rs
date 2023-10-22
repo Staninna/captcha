@@ -26,7 +26,7 @@ impl Captcha {
         let code = Self::gen_code(length);
         let image_id = (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "");
 
-        let image = Self::gen_img(&Self::gen_code(length));
+        let image = Self::gen_img(&code);
 
         let image_path = Self::save_img(&image, &image_id, temp_dir);
 
