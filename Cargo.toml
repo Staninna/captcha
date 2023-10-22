@@ -1,0 +1,19 @@
+[package]
+name = "captcha"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = { version = "0.5.0-rc.1", features = ["json"] }
+serde = { version = "1.0.130", features = ["derive"] }
+uuid = { version = "1.5.0", features = ["v4"] }
+lazy_static = "1.4.0"
+serde_json = "1.0.68"
+hashbrown = "0.14.2"
+imageproc = "0.23.0"
+tempfile = "3.8.0"
+rusttype = "0.9.3"
+image = "0.24.7"
+rand = "0.8.5"
