@@ -5,7 +5,7 @@ mod captcha;
 pub use captcha::Captcha;
 
 mod routes;
-pub use routes::{delete_captcha, get_captcha_img, help, new_captcha};
+pub use routes::{captcha_img, delete_captcha, help, new_captcha};
 
 mod msg;
 pub(super) use msg::Msg;

@@ -2,7 +2,7 @@ use super::{AppStatePointer, Captcha, Msg};
 use rocket::{fs::NamedFile, get, response::status::NotFound, serde::json::Json, State};
 use serde::Serialize;
 
-#[get("/captcha/new?<len>&<auth>")]
+#[get("/new?<len>&<auth>")]
 pub async fn new_captcha(
     len: usize,
     auth: String,
@@ -26,8 +26,8 @@ pub struct CaptchaResponse {
     id: String,
 }
 
-#[get("/captcha/image?<id>&<auth>")]
-pub async fn get_captcha_img(
+#[get("/image?<id>&<auth>")]
+pub async fn captcha_img(
     id: String,
     auth: String,
     app_state: &State<AppStatePointer>,
@@ -52,7 +52,7 @@ pub async fn get_captcha_img(
 // Delete the captcha image from the server
 // TODO: Make this a DELETE request instead of GET
 //       because it modifies the server state but for debugging purposes it's fine
-#[get("/captcha/delete?<id>&<auth>")]
+#[get("/delete?<id>&<auth>")]
 pub async fn delete_captcha(
     id: String,
     auth: String,
