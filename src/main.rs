@@ -2,6 +2,13 @@ use crate::v1::{delete_captcha, get_captcha_img, help, new_captcha};
 use rocket::{get, launch, routes};
 use tempfile::tempdir;
 
+// TODO: Add valid until field to captcha
+//       if expired, delete the captcha image from the server
+// TODO: Add way to authenticate requests to create, delete, and get captchas
+// TODO: Give unique urls to each captcha image so they can be inserted into
+//       html pages without leaking the auth token
+// TODO: Add logging
+
 mod v1;
 
 #[launch]
