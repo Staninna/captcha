@@ -8,6 +8,7 @@ pub struct AppState {
     temp_dir: TempDir,
     auth_tokens: Vec<String>,
     captchas: HashMap<String, Captcha>,
+    image_urls: HashMap<String, String>,
 }
 
 impl AppState {
@@ -15,11 +16,13 @@ impl AppState {
         let temp_dir = tempdir().expect("Failed to create temp dir");
         let auth_tokens = vec!["TOKEN".to_string()];
         let captchas = HashMap::new();
+        let image_urls = HashMap::new();
 
         let app_state = AppState {
             temp_dir,
             auth_tokens,
             captchas,
+            image_urls,
         };
 
         RwLock::new(app_state)
