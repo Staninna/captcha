@@ -77,7 +77,7 @@ pub async fn delete_captcha(
 
 #[get("/help")]
 pub async fn help() -> &'static str {
-    "GET /api/v1/captcha/new?length=<length>&auth=<auth>
+    "GET /api/v1/captcha/new?len=<len>&auth=<auth>
     Creates a new captcha with the given length
     Returns a Captcha object with the captcha code and captcha image id
 
