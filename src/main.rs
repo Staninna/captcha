@@ -23,8 +23,12 @@ fn rocket() -> _ {
 
 #[get("/")]
 fn index() -> &'static str {
-    "API v1 is located at /api/v1
-For more information, go to /api/v1/help
+    "Welcome to Captcha API
 
-This is a work in progress. Please report any bugs to https://github.com/Staninna/captcha/issues"
+This API provides a simple way to generate captcha images for your website.
+
+- To access API v1, navigate to /api/v1. For example, /api/v1/captcha/new.
+- Need help or information on available endpoints? Visit /api/v1/help.
+
+Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on our GitHub repository: https://github.com/Staninna/captcha/issues."
 }

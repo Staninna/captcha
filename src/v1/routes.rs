@@ -77,17 +77,26 @@ pub async fn delete_captcha(
 
 #[get("/help")]
 pub async fn help() -> &'static str {
-    "GET /api/v1/captcha/new?len=<len>&auth=<auth>
-    Creates a new captcha with the given length
-    Returns a Captcha object with the captcha code and captcha image id
+    "GET /api/v1/captcha/new?len=<len>&auth=<auth_token>
+- Description: Creates a new captcha with the given length.
+- Returns: A Captcha object with the captcha code and captcha image id.
+- Parameters:
+    - len: Length of the captcha code.
+    - auth_token: Your auth token.
 
-GET /api/v1/captcha/image?id=<id>&auth=<auth>
-    Returns the captcha image with the given captcha id
+GET /api/v1/captcha/image?id=<captcha_id>&auth=<auth_token>
+- Description: Returns the captcha image with the given captcha id.
+- Parameters:
+    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new.
+    - auth_token: Your auth token.
 
-DELETE /api/v1/captcha/delete?id=<id>&auth=<auth>
-    Deletes the captcha image with the given captcha id
-    Note: This is a GET request for debugging purposes while the API is in development
+DELETE /api/v1/captcha/delete?id=<captcha_id>&auth=<auth_token>
+- Description: Deletes the captcha image with the given captcha id.
+- Parameters:
+    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new.
+    - auth_token: Your auth token.
+- Note: This is a GET request for debugging purposes during API development.
 
 GET /api/v1/help
-    Returns this help message"
+    - Description: Returns this help message."
 }
