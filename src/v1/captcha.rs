@@ -1,4 +1,4 @@
-use super::{AppStatePointer, CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
+use super::{CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
 use image::Rgba;
 use imageproc::{definitions::Image, drawing::draw_text};
 use lazy_static::lazy_static;
@@ -17,14 +17,12 @@ pub struct Captcha {
 }
 
 impl Captcha {
-    pub async fn new(length: usize, app_state: &AppStatePointer) -> Self {
+    pub async fn new(length: usize, temp_dir: &TempDir) -> Self {
         let code = Self::gen_code(length);
         let image_id = (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "");
 
         let image = Self::gen_img(&Self::gen_code(length));
 
-        let app_state = app_state.read().await;
-        let temp_dir = app_state.temp_dir();
         Self::save_img(&image, &image_id, temp_dir);
 
         Self { code, image_id }
