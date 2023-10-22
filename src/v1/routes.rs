@@ -1,5 +1,5 @@
 use super::{AppStatePointer, Captcha, Msg};
-use rocket::{delete, fs::NamedFile, get, response::status::NotFound, serde::json::Json, State};
+use rocket::{fs::NamedFile, get, response::status::NotFound, serde::json::Json, State};
 use serde::Serialize;
 
 #[get("/captcha/new?<len>&<auth>")]
@@ -8,7 +8,7 @@ pub async fn new_captcha(
     auth: String,
     app_state: &State<AppStatePointer>,
 ) -> Result<Json<Captcha>, Json<Msg>> {
-    let app_state = app_state.write().await;
+    let app_state = app_state.read().await;
     match app_state.authed(&auth) {
         true => (),
         false => return Err(Json(Msg::new("Not authorized"))),
