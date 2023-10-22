@@ -50,7 +50,9 @@ pub async fn get_captcha_img(
 }
 
 // Delete the captcha image from the server
-#[delete("/captcha/delete?<id>&<auth>")]
+// TODO: Make this a DELETE request instead of GET
+//       because it modifies the server state but for debugging purposes it's fine
+#[get("/captcha/delete?<id>&<auth>")]
 pub async fn delete_captcha(
     id: String,
     auth: String,
@@ -84,6 +86,7 @@ GET /api/v1/captcha/image?id=<id>&auth=<auth>
 
 DELETE /api/v1/captcha/delete?id=<id>&auth=<auth>
     Deletes the captcha image with the given captcha id
+    Note: This is a GET request for debugging purposes while the API is in development
 
 GET /api/v1/help
     Returns this help message"
