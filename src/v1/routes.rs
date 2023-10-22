@@ -49,6 +49,7 @@ pub async fn captcha_img(
 // Delete the captcha image from the server
 // TODO: Make this a DELETE request instead of GET
 //       because it modifies the server state but for debugging purposes it's fine
+//       DONT FORGET TO REMOVE THE NOTE IN THE HELP MESSAGE
 #[get("/delete?<id>&<auth>")]
 pub async fn delete_captcha(
     id: String,
@@ -72,6 +73,7 @@ pub async fn delete_captcha(
 // Verify the captcha code
 // TODO: Make this a POST request instead of GET
 //       because it modifies the server state but for debugging purposes it's fine
+//       DONT FORGET TO REMOVE THE NOTE IN THE HELP MESSAGE
 #[get("/verify?<id>&<code>&<auth>")]
 pub async fn verify_captcha(
     id: String,
