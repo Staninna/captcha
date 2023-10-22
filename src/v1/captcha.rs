@@ -1,6 +1,7 @@
-use std::path::PathBuf;
+use std::{ops::Add, path::PathBuf};
 
-use super::{CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
+use super::{consts::CAPTCHA_EXPIRE_TIME, CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
+use chrono::{DateTime, Duration, Utc};
 use image::Rgba;
 use imageproc::{definitions::Image, drawing::draw_text};
 use lazy_static::lazy_static;
@@ -10,15 +11,12 @@ use serde::Serialize;
 use tempfile::TempDir;
 use uuid::Uuid;
 
-// TODO: Add valid until field to captcha
-// if expired, delete the captcha image from the server
-#[derive(Serialize)]
+#[derive(Serialize, Clone, Debug)]
 pub struct Captcha {
+    #[serde(skip_serializing)]
     code: String,
     image_id: String,
-
-    // DEBUG: Remove this field
-    image_path: PathBuf,
+    expire_time: DateTime<Utc>,
 }
 
 impl Captcha {
@@ -27,17 +25,32 @@ impl Captcha {
         let image_id = (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "");
 
         let image = Self::gen_img(&code);
-
         let image_path = Self::save_img(&image, &image_id, temp_dir);
+
+        let valid_till = Utc::now().add(Duration::seconds(CAPTCHA_EXPIRE_TIME));
 
         Self {
             code,
             image_id,
-            image_path,
+            expire_time: valid_till,
         }
     }
-}
 
+    pub fn expired(&self) -> bool {
+        Utc::now() > self.expire_time
+    }
+
+    pub fn verify(&self, code: &str) -> bool {
+        dbg!(&self.code);
+        dbg!(code);
+        self.code == code
+    }
+
+    pub fn id(&self) -> &str {
+        &self.image_id
+    }
+}
+//
 // Private methods
 impl Captcha {
     fn gen_code(length: usize) -> String {
@@ -48,6 +61,7 @@ impl Captcha {
             let index = rng.gen_range(0..CHARACTERS.len());
             code.push(CHARACTERS[index]);
         }
+        dbg!(&code);
 
         code
     }
@@ -56,7 +70,7 @@ impl Captcha {
         lazy_static! {
             static ref FONT: rusttype::Font<'static> =
                 rusttype::Font::try_from_bytes(FONT_FILE).unwrap();
-        };
+        }
 
         let mut image = Image::new(WIDTH, HEIGHT);
         let mut rng = rand::thread_rng();

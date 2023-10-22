@@ -1,4 +1,4 @@
-use crate::v1::{captcha_img, delete_captcha, help, new_captcha, AppState};
+use crate::v1::{captcha_img, delete_captcha, help, new_captcha, verify_captcha, AppState};
 use rocket::{get, launch, routes};
 
 // TODO: Add valid until field to captcha
@@ -16,7 +16,7 @@ fn rocket() -> _ {
         .mount("/api/v1", routes![help])
         .mount(
             "/api/v1/captcha",
-            routes![new_captcha, captcha_img, delete_captcha],
+            routes![new_captcha, captcha_img, delete_captcha, verify_captcha],
         )
         .manage(AppState::new())
 }

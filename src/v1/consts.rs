@@ -11,3 +11,4 @@ pub const WIDTH: u32 = 100 * 3;
 pub const HEIGHT: u32 = 40 * 3;
 pub const FONT_FILE: &[u8] = include_bytes!("../../fonts/opensans.ttf");
 
+pub const CAPTCHA_EXPIRE_TIME: i64 = 60 * 5; // 5 minutes
