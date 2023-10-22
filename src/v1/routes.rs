@@ -48,3 +48,16 @@ pub async fn delete_captcha(captcha_id: String, state: &State<TempDir>) -> Json<
         )),
     }
 }
+
+#[get("/help")]
+pub async fn help() -> &'static str {
+    "GET /api/v1/captcha/new?length=<length>
+    Creates a new captcha with the given length
+    Returns a Captcha object with the captcha code and captcha image id
+
+GET /api/v1/captcha/image?captcha_id=<captcha_id>
+    Returns the captcha image with the given captcha id
+
+DELETE /api/v1/captcha/delete?captcha_id=<captcha_id>
+    Deletes the captcha image with the given captcha id"
+}
