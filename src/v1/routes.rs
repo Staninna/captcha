@@ -122,26 +122,54 @@ async fn delete_captcha_by_id(
 }
 #[get("/help")]
 pub async fn help() -> &'static str {
-    "GET /api/v1/captcha/new?len=<len>&auth=<auth_token>
-- Description: Creates a new captcha with the given length.
-- Returns: A Captcha object with the captcha code and captcha image id.
-- Parameters:
-    - len: Length of the captcha code.
-    - auth_token: Your auth token.
+    "API v1 Documentation
 
-GET /api/v1/captcha/image?id=<captcha_id>&auth=<auth_token>
-- Description: Returns the captcha image with the given captcha id.
-- Parameters:
-    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new.
-    - auth_token: Your auth token.
+Welcome to the documentation for API v1. This API provides the following endpoints for managing captchas:
 
-DELETE /api/v1/captcha/delete?id=<captcha_id>&auth=<auth_token>
-- Description: Deletes the captcha image with the given captcha id.
-- Parameters:
-    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new.
-    - auth_token: Your auth token.
-- Note: This is a GET request for debugging purposes during API development.
+Create a New Captcha
+  - Endpoint: GET /api/v1/captcha/new?len=<len>&auth=<auth_token>
+  - Description: Creates a new captcha with the given length
+  - Returns:
+    - A Captcha object with the captcha image id and expiration time
+    - A error message
+  Parameters:
+    - len: Length of the captcha code
+    - auth_token: Your auth token
 
-GET /api/v1/help
-    - Description: Returns this help message."
+Retrieve Captcha Image
+  - Endpoint: GET /api/v1/captcha/image?id=<captcha_id>&auth=<auth_token>
+  - Description: Returns the captcha image with the given captcha id
+  - Returns:
+    - The captcha image as a PNG file
+    - A error message
+  Parameters:
+    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
+    - auth_token: Your auth token
+
+Delete Captcha
+  - Endpoint: DELETE /api/v1/captcha/delete?id=<captcha_id>&auth=<auth_token>
+  - Description: Deletes the captcha image with the given captcha id
+  - Returns:
+    - A status message
+  Parameters:
+    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
+    - auth_token: Your auth token
+  - Note: This is currently a GET request for debugging purposes during API development
+
+Verify Captcha Code
+  - Endpoint: POST /api/v1/captcha/verify?id=<captcha_id>&code=<code>&auth=<auth_token>
+  - Description: Verify the captcha code
+  - Returns:
+    - A status message
+  Parameters:
+    - captcha_id: Id of the captcha to verify
+    - code: The code to verify against
+    - auth_token: Your auth token
+  - Note: This is currently a GET request for debugging purposes during API development
+
+API Help
+  - Endpoint: GET /api/v1/help
+  - Description: Returns this help message
+
+Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
 }
