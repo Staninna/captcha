@@ -1,5 +1,3 @@
-use std::{ops::Add, path::PathBuf};
-
 use super::{consts::CAPTCHA_EXPIRE_TIME, CHARACTERS, FONT_FILE, HEIGHT, WIDTH};
 use chrono::{DateTime, Duration, Utc};
 use image::Rgba;
@@ -8,6 +6,7 @@ use lazy_static::lazy_static;
 use rand::Rng;
 use rusttype::Scale;
 use serde::Serialize;
+use std::ops::Add;
 use tempfile::TempDir;
 use uuid::Uuid;
 
@@ -25,7 +24,7 @@ impl Captcha {
         let image_id = (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "");
 
         let image = Self::gen_img(&code);
-        let image_path = Self::save_img(&image, &image_id, temp_dir);
+        Self::save_img(&image, &image_id, temp_dir);
 
         let valid_till = Utc::now().add(Duration::seconds(CAPTCHA_EXPIRE_TIME));
 
@@ -41,8 +40,6 @@ impl Captcha {
     }
 
     pub fn verify(&self, code: &str) -> bool {
-        dbg!(&self.code);
-        dbg!(code);
         self.code == code
     }
 
@@ -115,9 +112,8 @@ impl Captcha {
         image
     }
 
-    fn save_img(image: &Image<Rgba<u8>>, image_id: &str, temp_dir: &TempDir) -> PathBuf {
+    fn save_img(image: &Image<Rgba<u8>>, image_id: &str, temp_dir: &TempDir) {
         let file_path = temp_dir.path().join(image_id.to_string() + ".png");
         image.save(&file_path).unwrap();
-        file_path
     }
 }
