@@ -1,6 +1,5 @@
 use super::{AppStatePointer, Captcha, Msg};
 use rocket::{fs::NamedFile, get, response::status::NotFound, serde::json::Json, State};
-use serde::Serialize;
 
 #[get("/new?<len>&<auth>")]
 pub async fn new_captcha(
@@ -18,12 +17,6 @@ pub async fn new_captcha(
     let captcha = Captcha::new(len, temp_dir).await;
 
     Ok(Json(captcha))
-}
-
-#[derive(Serialize)]
-pub struct CaptchaResponse {
-    msg: String,
-    id: String,
 }
 
 #[get("/image?<id>&<auth>")]
