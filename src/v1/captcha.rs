@@ -62,6 +62,7 @@ impl Captcha {
         let mut rng = rand::thread_rng();
 
         // Random background noise
+        // TODO: Make pixels bigger in size in relaton to the image size
         for x in 0..WIDTH {
             for y in 0..HEIGHT {
                 let color = Rgba([
