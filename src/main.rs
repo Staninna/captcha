@@ -24,5 +24,7 @@ fn rocket() -> _ {
 #[get("/")]
 fn index() -> &'static str {
     "API v1 is located at /api/v1
-For more information, go to /api/v1/help"
+For more information, go to /api/v1/help
+
+This is a work in progress. Please report any bugs to https://github.com/Staninna/captcha/issues"
 }
