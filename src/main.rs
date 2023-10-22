@@ -1,8 +1,6 @@
 use crate::v1::{captcha_img, delete_captcha, help, new_captcha, verify_captcha, AppState};
 use rocket::{get, launch, routes};
 
-// TODO: Add valid until field to captcha
-//       if expired, delete the captcha image from the server
 // TODO: Give unique urls to each captcha image so they can be inserted into
 //       html pages without leaking the auth token
 // TODO: Add logging
