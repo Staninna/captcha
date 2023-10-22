@@ -133,7 +133,7 @@ Create a New Captcha
   - Returns:
     - A Captcha object with the captcha image id and expiration time
     - A error message
-  Parameters:
+  - Parameters:
     - len: Length of the captcha code
     - auth_token: Your auth token
 
@@ -143,7 +143,7 @@ Retrieve Captcha Image
   - Returns:
     - The captcha image as a PNG file
     - A error message
-  Parameters:
+  - Parameters:
     - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
     - auth_token: Your auth token
 
@@ -152,7 +152,7 @@ Delete Captcha
   - Description: Deletes the captcha image with the given captcha id
   - Returns:
     - A status message
-  Parameters:
+  - Parameters:
     - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
     - auth_token: Your auth token
   - Note: This is currently a GET request for debugging purposes during API development
@@ -162,7 +162,7 @@ Verify Captcha Code
   - Description: Verify the captcha code
   - Returns:
     - A status message
-  Parameters:
+  - Parameters:
     - captcha_id: Id of the captcha to verify
     - code: The code to verify against
     - auth_token: Your auth token
