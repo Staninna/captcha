@@ -10,12 +10,12 @@ In order to install the captcha-API, you need to have [Rust](https://www.rust-la
 
 ### Generate a captcha
 
-To generate a captcha, send a `GET` request to `/api/v1/captcha/new`. With the following query parameters:
+To generate a captcha, send a `GET` request to `/api/v1/new`. With the following query parameters:
 
-- `len`: The length of the captcha.
+- `level`: The difficulty level of the captcha. This is a value between 1-9. The difficulty level increases every 3 levels. The default value can be set in the `.env` file.
 - `auth`: The authentication token.
 
-The response will be a JSON object with the following structure:
+The response will be a JSON object with the following structure or an error message:
 
 ```json
 {
@@ -26,31 +26,43 @@ The response will be a JSON object with the following structure:
 
 ### Get a captcha image
 
-To get a captcha image, send a `GET` request to `/api/v1/captcha/image`. With the following query parameters:
+To get a captcha image, send a `GET` request to `/api/v1/image`. With the following query parameters:
 
-- `id`: The image id of the captcha.
+- `id`: The image id of the captcha. Got from the `/api/v1/new` endpoint.
 - `auth`: The authentication token.
 
 The response will be the captcha image in PNG format.
 
 ### Get a captcha image url
 
-To get a captcha image url, send a `GET` request to `/api/v1/captcha/image-url`. With the following query parameters:
+To get a captcha image url, send a `GET` request to `/api/v1/image_url`. With the following query parameters:
 
 - `id`: The image id of the captcha.
 - `auth`: The authentication token.
 
-The response will be a plain text url to the captcha image. Note that the url can only be used once. After that, the image will be deleted.
+The response will be a JSON object with the following structure or an error message:
+
+```json
+{
+    "msg": "url",
+}
+```
 
 ### Validate a captcha
 
 To validate a captcha, send a `POST` request to `/api/v1/captcha/verify`. With the following query parameters:
 
-- `id`: The image id of the captcha.
+- `id`: The image id of the captcha. Got from the `/api/v1/new` endpoint.
 - `auth`: The authentication token.
 - `code`: The code of the captcha.
 
 The response will be a JSON object with a message indicating whether the captcha was valid or not.
+
+```json
+{
+    "msg": "message",
+}
+```
 
 <!-- TODO: Add example captcha image's. -->
 
