@@ -1,7 +1,4 @@
-use crate::v1::{
-    captcha_img, captcha_img_url, captcha_img_url_redirect, help, new_captcha, verify_captcha,
-    AppState,
-};
+use crate::v1::{help, new_captcha, verify_captcha, AppState};
 use rocket::{get, launch, routes};
 
 // TODO: Add logging
@@ -11,12 +8,8 @@ mod v1;
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![index, captcha_img_url_redirect])
-        .mount("/api/v1", routes![help])
-        .mount(
-            "/api/v1/captcha",
-            routes![new_captcha, captcha_img, verify_captcha, captcha_img_url],
-        )
+        .mount("/", routes![index])
+        .mount("/api/v1", routes![help, new_captcha, verify_captcha])
         .manage(AppState::new())
 }
 
