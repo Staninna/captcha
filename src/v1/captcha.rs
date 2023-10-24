@@ -35,7 +35,6 @@ pub struct Captcha {
 }
 
 impl Captcha {
-    // TODO: Add way to configure length of captcha removed because caused issues
     pub async fn new(level: Level, config: &HashMap<ConfigKey, ConfigValue>) -> Self {
         let difficulty = match &level {
             Level::Easy(_) => Difficulty::Easy,
