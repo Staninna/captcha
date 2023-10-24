@@ -80,7 +80,6 @@ impl Captcha {
     }
 
     pub fn verify(&self, code: &str) -> bool {
-        dbg!(&self.code, code);
         self.code == code
     }
 
