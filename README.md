@@ -53,3 +53,7 @@ To validate a captcha, send a `POST` request to `/api/v1/captcha/verify`. With t
 The response will be a JSON object with a message indicating whether the captcha was valid or not.
 
 <!-- TODO: Add example captcha image's. -->
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
