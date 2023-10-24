@@ -44,7 +44,7 @@ The response will be a plain text url to the captcha image. Note that the url ca
 
 ### Validate a captcha
 
-To validate a captcha, send a `GET` request to `/api/v1/captcha/verify`. With the following query parameters:
+To validate a captcha, send a `POST` request to `/api/v1/captcha/verify`. With the following query parameters:
 
 - `id`: The image id of the captcha.
 - `auth`: The authentication token.
