@@ -89,30 +89,6 @@ pub async fn captcha_img_url_redirect(
     }
 }
 
-// Delete the captcha image from the server
-// TODO: Make this a DELETE request instead of GET
-//       because it modifies the server state but for debugging purposes it's fine
-//       DONT FORGET TO REMOVE THE NOTE IN THE HELP MESSAGE
-#[get("/delete?<id>&<auth>")]
-pub async fn delete_captcha(
-    id: String,
-    auth: String,
-    app_state: &State<AppStatePointer>,
-) -> Json<Msg> {
-    let app_state = app_state.read().await;
-    match app_state.authed(&auth) {
-        true => (),
-        false => return Json(Msg::new("Not authorized")),
-    }
-
-    let result = delete_captcha_by_id(&id, app_state).await;
-
-    match result {
-        Ok(_) => Json(Msg::new("Captcha deleted")),
-        Err(_) => Json(Msg::new("Captcha not found")),
-    }
-}
-
 // Verify the captcha code
 // TODO: Make this a POST request instead of GET
 //       because it modifies the server state but for debugging purposes it's fine
@@ -199,16 +175,6 @@ Retrieve Captcha Image URL
   - Parameters:
     - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
     - auth_token: Your auth token
-
-Delete Captcha
-  - Endpoint: DELETE /api/v1/captcha/delete?id=<captcha_id>&auth=<auth_token>
-  - Description: Deletes the captcha image with the given captcha id
-  - Returns:
-    - A status message
-  - Parameters:
-    - captcha_id: Id of the captcha image obtained from /api/v1/captcha/new
-    - auth_token: Your auth token
-  - Note: This is currently a GET request for debugging purposes during API development
 
 Verify Captcha Code
   - Endpoint: POST /api/v1/captcha/verify?id=<captcha_id>&code=<code>&auth=<auth_token>

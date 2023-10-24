@@ -6,8 +6,7 @@ pub use captcha::Captcha;
 
 mod routes;
 pub use routes::{
-    captcha_img, captcha_img_url, captcha_img_url_redirect, delete_captcha, help, new_captcha,
-    verify_captcha,
+    captcha_img, captcha_img_url, captcha_img_url_redirect, help, new_captcha, verify_captcha,
 };
 
 mod msg;

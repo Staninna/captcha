@@ -1,6 +1,6 @@
 use crate::v1::{
-    captcha_img, captcha_img_url, captcha_img_url_redirect, delete_captcha, help, new_captcha,
-    verify_captcha, AppState,
+    captcha_img, captcha_img_url, captcha_img_url_redirect, help, new_captcha, verify_captcha,
+    AppState,
 };
 use rocket::{get, launch, routes};
 
@@ -17,13 +17,7 @@ fn rocket() -> _ {
         .mount("/api/v1", routes![help])
         .mount(
             "/api/v1/captcha",
-            routes![
-                new_captcha,
-                captcha_img,
-                delete_captcha,
-                verify_captcha,
-                captcha_img_url
-            ],
+            routes![new_captcha, captcha_img, verify_captcha, captcha_img_url],
         )
         .manage(AppState::new())
 }
