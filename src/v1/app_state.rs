@@ -70,6 +70,17 @@ impl AppState {
 
     pub fn remove_captcha(&mut self, captcha_id: &str) {
         self.captchas.remove(captcha_id);
+
+        let mut urls_to_remove = Vec::new();
+        for (url, id) in &self.urls {
+            if id == captcha_id {
+                urls_to_remove.push(url.to_string());
+            }
+        }
+
+        for url in urls_to_remove {
+            self.urls.remove(&url);
+        }
     }
 
     pub fn urls(&self) -> &HashMap<CaptchaUrl, CaptchaId> {
@@ -78,11 +89,5 @@ impl AppState {
 
     pub fn add_url(&mut self, url: &str, captcha_id: &str) {
         self.urls.insert(captcha_id.to_string(), url.to_string());
-    }
-
-    // TODO: Make so peridically remove urls older than X minutes
-    #[allow(dead_code)]
-    pub fn remove_url(&mut self, url: &str) {
-        self.urls.remove(url);
     }
 }
