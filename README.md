@@ -6,7 +6,7 @@ This is a simple captcha-API that can be used to generate captchas and validate 
 
 In order to install the captcha-API, you need to have [Rust](https://www.rust-lang.org/) installed. Then, clone this repository and run `cargo build --release`. This will create an executable in `target/release/captcha`. You can then run this executable to start the captcha-API.
 
-There is alse a example app written in PHP that uses the captcha-API. To run this example app, you need to have [PHP](https://www.php.net/) installed. Then, clone this repository and run `php -S localhost:8001`. This will start a webserver on port 8001. Then run the captcha-API as described above. You can then open `http://localhost:8001/` in your browser to see the example app.
+There is alse a example app written in PHP that uses the captcha-API. To run this example app, you need to have [PHP](https://www.php.net/) installed. Then, run `php -S localhost:8001`. This will start a webserver on port 8001. Then run the captcha-API as described above(`cargo build --release`, `target/release/captcha`). You can then open `http://localhost:8001/` in your browser to see the example app.
 
 ## Usage
 
