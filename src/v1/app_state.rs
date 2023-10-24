@@ -43,4 +43,16 @@ impl AppState {
     pub fn add_captcha(&mut self, captcha: Captcha) {
         self.captchas.insert(captcha.id().to_string(), captcha);
     }
+
+    pub fn add_image_url(&mut self, id: &str, url: &str) {
+        self.image_urls.insert(id.to_string(), url.to_string());
+    }
+
+    pub fn get_image_url(&self, id: &str) -> Option<&String> {
+        self.image_urls.get(id)
+    }
+
+    pub fn remove_image_url(&mut self, id: &str) {
+        self.image_urls.remove(id);
+    }
 }

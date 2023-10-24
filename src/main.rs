@@ -1,4 +1,7 @@
-use crate::v1::{captcha_img, delete_captcha, help, new_captcha, verify_captcha, AppState};
+use crate::v1::{
+    captcha_img, captcha_img_url, captcha_img_url_redirect, delete_captcha, help, new_captcha,
+    verify_captcha, AppState,
+};
 use rocket::{get, launch, routes};
 
 // TODO: Give unique urls to each captcha image so they can be inserted into
@@ -10,11 +13,17 @@ mod v1;
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount("/", routes![index])
+        .mount("/", routes![index, captcha_img_url_redirect])
         .mount("/api/v1", routes![help])
         .mount(
             "/api/v1/captcha",
-            routes![new_captcha, captcha_img, delete_captcha, verify_captcha],
+            routes![
+                new_captcha,
+                captcha_img,
+                delete_captcha,
+                verify_captcha,
+                captcha_img_url
+            ],
         )
         .manage(AppState::new())
 }
