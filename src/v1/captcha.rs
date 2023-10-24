@@ -1,3 +1,4 @@
+use super::{ConfigKey, ConfigValue};
 use captcha::{CaptchaName, Difficulty};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
@@ -5,8 +6,7 @@ use serde::Serialize;
 use std::ops::Add;
 use uuid::Uuid;
 
-use super::{ConfigKey, ConfigValue};
-
+// TODO: Improve Levels are currently used it is confusing
 pub enum Level {
     Easy(u8),
     Normal(u8),
