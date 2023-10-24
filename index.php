@@ -89,8 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <div class="col-md-6">
             <h2>Capthca Image</h2>
             <img src="<?= $captchaImageUrl ?>" alt="CAPTCHA">
-            <a href="index.php">Refresh</a>
-
             <form method="GET" action="index.php">
                 <div class="form-group">
                     <label for="level">Select CAPTCHA Level:</label>
@@ -107,7 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         ?>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Generate CAPTCHA</button>
+                <button type="submit" class="btn btn-primary">Set CAPTCHA Level</button>
+                <a href="index.php">
+                    <button type="button" class="btn btn-primary">Generate New CAPTCHA</button>
+                </a>
             </form>
 
             <form method="POST" action="index.php">
