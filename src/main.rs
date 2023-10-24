@@ -4,8 +4,6 @@ use crate::v1::{
 };
 use rocket::{get, launch, routes};
 
-// TODO: Give unique urls to each captcha image so they can be inserted into
-//       html pages without leaking the auth token
 // TODO: Add logging
 
 mod v1;
