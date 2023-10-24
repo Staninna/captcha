@@ -51,9 +51,9 @@ impl Captcha {
         };
 
         let name = match name_id {
-            1 => CaptchaName::Amelia,
-            2 => CaptchaName::Lucy,
-            3 => CaptchaName::Mila,
+            1 | 4 | 7 => CaptchaName::Amelia,
+            2 | 5 | 8 => CaptchaName::Lucy,
+            3 | 6 | 9 => CaptchaName::Mila,
             _ => unreachable!(),
         };
 
