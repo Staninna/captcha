@@ -1,6 +1,6 @@
 # Captcha
 
-This is a simple captcha-API that can be used to generate captchas and validate them. It is written in Rust and uses the [Rocket](https://rocket.rs/) framework. <!-- TODO: the captcha is generated using the [captcha](https://crates.io/crates/captcha) crate. -->
+This is a simple captcha-API that can be used to generate captchas and validate them. It is written in Rust and uses the [Rocket](https://rocket.rs/) framework the captcha is generated using the [captcha](https://crates.io/crates/captcha) crate.
 
 ## Installation
 

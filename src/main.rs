@@ -1,7 +1,8 @@
-use crate::v1::{help, new_captcha, verify_captcha, AppState};
+use crate::v1::{
+    captcha_image, captcha_image_url, captcha_image_url_redirect, help, new_captcha,
+    verify_captcha, AppState,
+};
 use rocket::{get, launch, routes};
-
-// TODO: Add logging
 
 mod v1;
 
@@ -9,7 +10,17 @@ mod v1;
 fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index])
-        .mount("/api/v1", routes![help, new_captcha, verify_captcha])
+        .mount(
+            "/api/v1",
+            routes![
+                help,
+                new_captcha,
+                verify_captcha,
+                captcha_image,
+                captcha_image_url,
+                captcha_image_url_redirect
+            ],
+        )
         .manage(AppState::new())
 }
 
@@ -23,4 +34,15 @@ This API provides a simple way to generate captcha images for your website
 - Need help or information on available endpoints? Visit /api/v1/help
 
 Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
+}
+
+#[macro_export]
+macro_rules! conf_get {
+    ($config:expr, $key:expr, $type:ty) => {
+        $config
+            .get($key)
+            .expect(&format!("{} must be set", $key))
+            .parse::<$type>()
+            .expect(&format!("{} must be a {}", $key, stringify!($type)))
+    };
 }

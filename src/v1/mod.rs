@@ -1,14 +1,13 @@
-mod consts;
-pub use consts::CAPTCHA_EXPIRE_TIME;
-
 mod captcha;
-pub use captcha::Captcha;
+pub use captcha::{Captcha, Level};
 
 mod routes;
-pub use routes::{help, new_captcha, verify_captcha};
+pub use routes::{
+    captcha_image, captcha_image_url, captcha_image_url_redirect, help, new_captcha, verify_captcha,
+};
 
 mod msg;
 pub(super) use msg::Msg;
 
 mod app_state;
-pub(super) use app_state::{AppState, AppStatePointer};
+pub(super) use app_state::{AppState, AppStatePointer, ConfigKey, ConfigValue};
