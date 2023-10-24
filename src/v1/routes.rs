@@ -8,9 +8,8 @@ use uuid::Uuid;
 pub struct CaptchaImage(pub Vec<u8>);
 
 // Create a new captcha
-#[get("/new?<len>&<level>&<auth>")]
+#[get("/new?<level>&<auth>")]
 pub async fn new_captcha(
-    len: Option<u32>,
     auth: String,
     level: Option<u32>,
     app_state: &State<AppStatePointer>,
@@ -22,28 +21,6 @@ pub async fn new_captcha(
     };
 
     let config = app_state.config();
-    let captcha_length = conf_get!(&config, "CAPTCHA_LENGTH", u32);
-    let captcha_min_length = conf_get!(&config, "CAPTCHA_MIN_LENGTH", u32).clone();
-    let captcha_max_length = conf_get!(&config, "CAPTCHA_MAX_LENGTH", u32).clone();
-    let len = match len {
-        Some(len) => {
-            if len < captcha_min_length {
-                return Err(Json(Msg::new(&format!(
-                    "Captcha length must be at least {}",
-                    captcha_min_length
-                ))));
-            } else if len > captcha_max_length {
-                return Err(Json(Msg::new(&format!(
-                    "Captcha length must be at most {}",
-                    captcha_max_length
-                ))));
-            } else {
-                len
-            }
-        }
-        None => captcha_length,
-    };
-
     let captcha_level = conf_get!(&config, "CAPTCHA_LEVEL", u8);
     let captcha_level = Level::from(captcha_level);
 
@@ -58,7 +35,7 @@ pub async fn new_captcha(
     };
 
     let config = app_state.config();
-    let captcha = Captcha::new(len, level, config).await;
+    let captcha = Captcha::new(level, config).await;
 
     app_state.add_captcha(captcha.clone());
 
@@ -198,19 +175,18 @@ pub async fn help() -> &'static str {
 Welcome to the documentation for API v1. This API provides the following endpoints for managing captchas:
 
 Create a New Captcha
-  - Endpoint: GET /api/v1/new?len=<len>&auth=<auth_token>
+  - Endpoint: GET /api/v1/new&auth=<auth_token>&level=<level>
   - Description: Creates a new captcha with the given length
   - Returns:
     - A Captcha object with the captcha image id and expiration time
     - A error message
   - Parameters:
-    - len: Length of the captcha code (Optional, defaults to 4)
     - level: Difficulty level of the captcha: (Optional, defaults to 4)
-        | Level | Description |
-        | ----- | ----------- |
-        | 1-3   | Easy        |
-        | 4-6   | Normal      |
-        | 7-9   | Hard        |
+      | Level | Description |
+      | ----- | ----------- |
+      | 1-3   | Easy        |
+      | 4-6   | Normal      |
+      | 7-9   | Hard        |
     - auth_token: Your auth token
 
 Get Captcha Image

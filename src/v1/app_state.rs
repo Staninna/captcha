@@ -22,10 +22,7 @@ impl AppState {
     pub fn new() -> AppStatePointer {
         dotenv::dotenv().ok();
 
-        // START: CONFIG
-
         let mut config = HashMap::new();
-
         let auth_token = dotenv::var("AUTH_TOKEN").expect("AUTH_TOKEN must be set");
         config.insert("AUTH_TOKEN".to_string(), auth_token.clone());
         let base_url = dotenv::var("BASE_URL").expect("BASE_URL must be set");
@@ -38,31 +35,8 @@ impl AppState {
             "CAPTCHA_EXPIRE_TIME".to_string(),
             captcha_expire_time.to_string(),
         );
-        let captcha_length = dotenv::var("CAPTCHA_LENGTH")
-            .expect("CAPTCHA_LENGTH must be set")
-            .parse::<u32>()
-            .expect("CAPTCHA_LENGTH must be an integer");
-        config.insert("CAPTCHA_LENGTH".to_string(), captcha_length.to_string());
-        let captcha_min_length = dotenv::var("CAPTCHA_MIN_LENGTH")
-            .expect("CAPTCHA_MIN_LENGTH must be set")
-            .parse::<u32>()
-            .expect("CAPTCHA_MIN_LENGTH must be an integer");
-        config.insert(
-            "CAPTCHA_MIN_LENGTH".to_string(),
-            captcha_min_length.to_string(),
-        );
-        let captcha_max_length = dotenv::var("CAPTCHA_MAX_LENGTH")
-            .expect("CAPTCHA_MAX_LENGTH must be set")
-            .parse::<u32>()
-            .expect("CAPTCHA_MAX_LENGTH must be an integer");
-        config.insert(
-            "CAPTCHA_MAX_LENGTH".to_string(),
-            captcha_max_length.to_string(),
-        );
         let captcha_level = dotenv::var("CAPTCHA_LEVEL").expect("CAPTCHA_LEVEL must be set");
         config.insert("CAPTCHA_LEVEL".to_string(), captcha_level.clone());
-
-        // END: CONFIG
 
         let captchas = HashMap::new();
         let urls = HashMap::new();

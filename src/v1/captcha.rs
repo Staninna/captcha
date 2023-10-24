@@ -35,7 +35,8 @@ pub struct Captcha {
 }
 
 impl Captcha {
-    pub async fn new(length: u32, level: Level, config: &HashMap<ConfigKey, ConfigValue>) -> Self {
+    // TODO: Add way to configure length of captcha removed because caused issues
+    pub async fn new(level: Level, config: &HashMap<ConfigKey, ConfigValue>) -> Self {
         let difficulty = match &level {
             Level::Easy(_) => Difficulty::Easy,
             Level::Normal(_) => Difficulty::Medium,
@@ -56,13 +57,7 @@ impl Captcha {
             _ => CaptchaName::Amelia,
         };
 
-        let mut captcha = captcha::by_name(difficulty, name);
-        let current_length = captcha.chars().len() as u32;
-        if current_length < length {
-            captcha.add_chars(length - current_length);
-        }
-        // TODO: Fix too long default from captcha crate when length is <5
-
+        let captcha = captcha::by_name(difficulty, name);
         let code = captcha.chars().iter().collect::<String>();
         let image = captcha.as_png().expect("Failed to generate captcha image");
 
@@ -85,6 +80,7 @@ impl Captcha {
     }
 
     pub fn verify(&self, code: &str) -> bool {
+        dbg!(&self.code, code);
         self.code == code
     }
 
