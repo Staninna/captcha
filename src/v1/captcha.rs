@@ -54,7 +54,7 @@ impl Captcha {
             1 => CaptchaName::Amelia,
             2 => CaptchaName::Lucy,
             3 => CaptchaName::Mila,
-            _ => CaptchaName::Amelia,
+            _ => unreachable!(),
         };
 
         let captcha = captcha::by_name(difficulty, name);
