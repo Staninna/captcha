@@ -10,7 +10,7 @@ In order to install the captcha-API, you need to have [Rust](https://www.rust-la
 
 ### Generate a captcha
 
-To generate a captcha, send a `GET` request to `/api/vi/captcha/new`. With the following query parameters:
+To generate a captcha, send a `GET` request to `/api/v1/captcha/new`. With the following query parameters:
 
 - `len`: The length of the captcha.
 - `auth`: The authentication token.
@@ -26,7 +26,7 @@ The response will be a JSON object with the following structure:
 
 ### Get a captcha image
 
-To get a captcha image, send a `GET` request to `/api/vi/captcha/image`. With the following query parameters:
+To get a captcha image, send a `GET` request to `/api/v1/captcha/image`. With the following query parameters:
 
 - `id`: The image id of the captcha.
 - `auth`: The authentication token.
@@ -35,7 +35,7 @@ The response will be the captcha image in PNG format.
 
 ### Get a captcha image url
 
-To get a captcha image url, send a `GET` request to `/api/vi/captcha/image-url`. With the following query parameters:
+To get a captcha image url, send a `GET` request to `/api/v1/captcha/image-url`. With the following query parameters:
 
 - `id`: The image id of the captcha.
 - `auth`: The authentication token.
@@ -44,7 +44,7 @@ The response will be a plain text url to the captcha image. Note that the url ca
 
 ### Validate a captcha
 
-To validate a captcha, send a `GET` request to `/api/vi/captcha/verify`. With the following query parameters:
+To validate a captcha, send a `GET` request to `/api/v1/captcha/verify`. With the following query parameters:
 
 - `id`: The image id of the captcha.
 - `auth`: The authentication token.
