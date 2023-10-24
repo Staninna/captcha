@@ -1,6 +1,6 @@
 use super::{consts::BASE_URL, AppState, AppStatePointer, Captcha, Msg};
 use rocket::{
-    fs::NamedFile, get, response::status::NotFound, serde::json::Json,
+    fs::NamedFile, get, post, response::status::NotFound, serde::json::Json,
     tokio::sync::RwLockReadGuard, State,
 };
 use uuid::Uuid;
@@ -90,10 +90,7 @@ pub async fn captcha_img_url_redirect(
 }
 
 // Verify the captcha code
-// TODO: Make this a POST request instead of GET
-//       because it modifies the server state but for debugging purposes it's fine
-//       DONT FORGET TO REMOVE THE NOTE IN THE HELP MESSAGE
-#[get("/verify?<id>&<code>&<auth>")]
+#[post("/verify?<id>&<code>&<auth>")]
 pub async fn verify_captcha(
     id: String,
     code: String,
