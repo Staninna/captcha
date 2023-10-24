@@ -64,6 +64,7 @@ impl Captcha {
     }
 
     fn gen_img(code: &str) -> Image<Rgba<u8>> {
+        // TODO: Use https://docs.rs/captcha/ to generate captcha images
         lazy_static! {
             static ref FONT: rusttype::Font<'static> =
                 rusttype::Font::try_from_bytes(FONT_FILE).unwrap();
