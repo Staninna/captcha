@@ -66,7 +66,12 @@ The response will be a JSON object with a message indicating whether the captcha
 }
 ```
 
-<!-- TODO: Add example captcha image's. -->
+## Example captchas
+
+| ![Amelia Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_easy.png) | ![Amelia Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_medium.png) | ![Amelia Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_hard.png) |
+| --- | --- | --- |
+| ![Lucy Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_easy.png) | ![Lucy Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_medium.png) | ![Lucy Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_hard.png) |
+| ![Mila Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_easy.png) | ![Mila Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_medium.png) | ![Mila Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_hard.png) |
 
 ## License
 
