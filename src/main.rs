@@ -1,3 +1,5 @@
+// TODO: Improve how the API returns objects, messages, and errors
+
 use crate::v1::{
     captcha_image, captcha_image_url, captcha_image_url_redirect, help, new_captcha,
     verify_captcha, AppState,
