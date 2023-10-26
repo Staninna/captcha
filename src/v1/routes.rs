@@ -58,27 +58,41 @@ pub async fn captcha_image(
     id: String,
     auth: String,
     app_state: &State<AppStatePointer>,
-) -> Option<CaptchaImage> {
+) -> Result<CaptchaImage, Json<Response>> {
     let mut app_state = app_state.write().await;
     match app_state.authed(&auth) {
         true => (),
-        false => return None,
+        false => {
+            let mut response = Response::new();
+            response.set_error("Not authorized");
+
+            return Err(Json(response));
+        }
     }
 
     let captcha = match app_state.captchas().get(&id) {
         Some(captcha) => captcha,
-        None => return None,
+        None => {
+            let mut response = Response::new();
+            response.set_warning("Captcha not found");
+
+            return Err(Json(response));
+        }
     };
 
     match captcha.expired() {
         true => {
             app_state.remove_captcha(&id);
-            return None;
+
+            let mut response = Response::new();
+            response.set_warning("Captcha expired");
+
+            return Err(Json(response));
         }
         false => (),
     }
 
-    Some(CaptchaImage(captcha.image().clone()))
+    Ok(CaptchaImage(captcha.image().clone()))
 }
 
 // Request a captcha image url
@@ -224,7 +238,7 @@ Create a New Captcha
     - A Captcha object with the captcha image id and expiration time
     - A error message
   - Parameters:
-    - level: Difficulty level of the captcha: (Optional, defaults to 4)
+    - level: Difficulty level of the captcha: (Optional)
       | Level | Description |
       | ----- | ----------- |
       | 1-3   | Easy        |
@@ -237,7 +251,7 @@ Get Captcha Image
   - Description: Returns the captcha image
   - Returns:
     - The captcha image
-    - A 404 error
+    - A error/warning message
   - Parameters:
     - captcha_id: Id of the captcha to get the image of
     - auth_token: Your auth token
