@@ -30,7 +30,7 @@ pub struct Captcha {
     image: Vec<u8>,
     #[serde(skip_serializing)]
     code: String,
-    image_id: String,
+    id: String,
     expire_time: DateTime<Utc>,
 }
 
@@ -60,17 +60,17 @@ impl Captcha {
         let code = captcha.chars().iter().collect::<String>();
         let image = captcha.as_png().expect("Failed to generate captcha image");
 
-        let image_id =
+        let id =
             (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "") + &code;
 
         let captcha_expire_time = config.get("CAPTCHA_EXPIRE_TIME").unwrap();
-        let valid_till = Utc::now().add(Duration::seconds(captcha_expire_time.parse().unwrap()));
+        let expire_time = Utc::now().add(Duration::seconds(captcha_expire_time.parse().unwrap()));
 
         Self {
             code,
             image,
-            image_id,
-            expire_time: valid_till,
+            id,
+            expire_time,
         }
     }
 
@@ -83,7 +83,7 @@ impl Captcha {
     }
 
     pub fn id(&self) -> &str {
-        &self.image_id
+        &self.id
     }
 
     pub fn image(&self) -> &Vec<u8> {

@@ -48,7 +48,7 @@ if (isset($_GET['level'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $captchaId = createNewCaptcha(AUTH_TOKEN, $_SESSION['level'])['image_id'];
+    $captchaId = createNewCaptcha(AUTH_TOKEN, $_SESSION['level'])['id'];
     $captchaImageUrl = getCaptchaImageURL($captchaId, AUTH_TOKEN);
     $response = json_decode($captchaImageUrl, true);
     $captchaImageUrl = $response['msg'];
