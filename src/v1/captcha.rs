@@ -6,7 +6,7 @@ use serde::Serialize;
 use std::ops::Add;
 use uuid::Uuid;
 
-// TODO: Improve Levels are currently used it is confusing
+// TODO: Remove the Levels and just make it customizable in the /new endpoint
 pub enum Level {
     Easy(u8),
     Normal(u8),
