@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $captchaId = createNewCaptcha(AUTH_TOKEN, $_SESSION['level'])['id'];
     $captchaImageUrl = getCaptchaImageURL($captchaId, AUTH_TOKEN);
     $response = json_decode($captchaImageUrl, true);
-    $captchaImageUrl = $response['msg'];
+    $captchaImageUrl = $response['url'];
 } else if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['code']) && isset($_POST['captchaId'])
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $response = json_decode($response, true);
 
     echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">';
-    if ($response['msg'] == 'Captcha verified') {
+    if ($response['ok'] == 'Captcha verified') {
         echo '<h1>Captcha verified</h1>';
     } else {
         echo '<h1>Captcha not verified</h1>';

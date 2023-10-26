@@ -1,4 +1,4 @@
-use super::{captcha::Level, AppStatePointer, Captcha, Msg};
+use super::{captcha::Level, AppStatePointer, Captcha, Response};
 use crate::conf_get;
 use rocket::{get, post, response::Responder, serde::json::Json, State};
 use uuid::Uuid;
@@ -13,11 +13,16 @@ pub async fn new_captcha(
     auth: String,
     level: Option<u32>,
     app_state: &State<AppStatePointer>,
-) -> Result<Json<Captcha>, Json<Msg>> {
+) -> Result<Json<Captcha>, Json<Response>> {
     let mut app_state = app_state.write().await;
     match app_state.authed(&auth) {
         true => (),
-        false => return Err(Json(Msg::new("Not authorized"))),
+        false => {
+            let mut response = Response::new();
+            response.set_error("Not authorized");
+
+            return Err(Json(response));
+        }
     };
 
     let config = app_state.config();
@@ -29,7 +34,12 @@ pub async fn new_captcha(
             1..=3 => Level::Easy(level as u8),
             4..=6 => Level::Normal(level as u8),
             7..=9 => Level::Hard(level as u8),
-            _ => return Err(Json(Msg::new("Invalid captcha level"))),
+            _ => {
+                let mut response = Response::new();
+                response.set_error("Invalid captcha level");
+
+                return Err(Json(response));
+            }
         },
         None => captcha_level,
     };
@@ -77,22 +87,35 @@ pub async fn captcha_image_url(
     id: String,
     auth: String,
     app_state: &State<AppStatePointer>,
-) -> Option<Json<Msg>> {
+) -> Option<Json<Response>> {
     let mut app_state = app_state.write().await;
     match app_state.authed(&auth) {
         true => (),
-        false => return Some(Json(Msg::new("Not authorized"))),
+        false => {
+            let mut response = Response::new();
+            response.set_error("Not authorized");
+
+            return Some(Json(response));
+        }
     }
 
     let captcha = match app_state.captchas().get(&id) {
         Some(captcha) => captcha,
-        None => return Some(Json(Msg::new("Captcha not found"))),
+        None => {
+            let mut response = Response::new();
+            response.set_warning("Captcha not found");
+
+            return Some(Json(response));
+        }
     };
 
     match captcha.expired() {
         true => {
             app_state.remove_captcha(&id);
-            return Some(Json(Msg::new("Captcha expired")));
+            let mut response = Response::new();
+            response.set_warning("Captcha expired");
+
+            return Some(Json(response));
         }
         false => (),
     }
@@ -102,7 +125,10 @@ pub async fn captcha_image_url(
     let base_url = conf_get!(app_state.config(), "BASE_URL", String);
     let url = format!("{}/api/v1/img/{}", base_url, unique_id);
 
-    Some(Json(Msg::new(&url)))
+    let mut response = Response::new();
+    response.set_url(&url);
+
+    Some(Json(response))
 }
 
 #[get("/img/<id>")]
@@ -138,22 +164,36 @@ pub async fn verify_captcha(
     code: String,
     auth: String,
     app_state: &State<AppStatePointer>,
-) -> Json<Msg> {
+) -> Json<Response> {
     let mut app_state = app_state.write().await;
     match app_state.authed(&auth) {
         true => (),
-        false => return Json(Msg::new("Not authorized")),
+        false => {
+            let mut response = Response::new();
+            response.set_error("Not authorized");
+
+            return Json(response);
+        }
     }
 
     let captcha = match app_state.captchas().get(&id) {
         Some(captcha) => captcha,
-        None => return Json(Msg::new("Captcha not found")),
+        None => {
+            let mut response = Response::new();
+            response.set_warning("Captcha not found");
+
+            return Json(response);
+        }
     };
 
     match captcha.expired() {
         true => {
             app_state.remove_captcha(&id);
-            return Json(Msg::new("Captcha expired"));
+
+            let mut response = Response::new();
+            response.set_warning("Captcha expired");
+
+            return Json(response);
         }
         false => (),
     }
@@ -165,7 +205,10 @@ pub async fn verify_captcha(
 
     app_state.remove_captcha(&id);
 
-    Json(Msg::new(result))
+    let mut response = Response::new();
+    response.set_ok(result);
+
+    Json(response)
 }
 
 #[get("/help")]
@@ -194,7 +237,7 @@ Get Captcha Image
   - Description: Returns the captcha image
   - Returns:
     - The captcha image
-    - A error message
+    - A 404 error
   - Parameters:
     - captcha_id: Id of the captcha to get the image of
     - auth_token: Your auth token
@@ -203,8 +246,8 @@ Get Captcha Image URL
     - Endpoint: GET /api/v1/image_url?id=<captcha_id>&auth=<auth_token>
     - Description: Returns the captcha image url
     - Returns:
-        - The captcha image url
-        - A error message
+        - A url to the captcha image in a JSON object
+        - A error/warning message
     - Parameters:
         - captcha_id: Id of the captcha to get the image url of
         - auth_token: Your auth token

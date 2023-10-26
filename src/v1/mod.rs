@@ -6,8 +6,8 @@ pub use routes::{
     captcha_image, captcha_image_url, captcha_image_url_redirect, help, new_captcha, verify_captcha,
 };
 
-mod msg;
-pub(super) use msg::Msg;
+mod response;
+pub(super) use response::Response;
 
 mod app_state;
 pub(super) use app_state::{AppState, AppStatePointer, ConfigKey, ConfigValue};
