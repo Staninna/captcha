@@ -25,6 +25,10 @@ impl Filters {
 
         let filters = filter_str.split(';').collect::<Vec<&str>>();
         for filter in filters {
+            if filter.is_empty() {
+                continue;
+            }
+
             let splitted = filter.split(':').collect::<Vec<&str>>();
             if splitted.len() != 2 {
                 return Err(format!("Invalid filter format: {}", filter));
