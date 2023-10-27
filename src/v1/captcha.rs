@@ -1,28 +1,12 @@
+use std::ops::Add;
+
 use super::{ConfigKey, ConfigValue};
-use captcha::{CaptchaName, Difficulty};
+use crate::conf_get;
+use captcha::filters::{Dots, Grid, Noise, Wave};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use serde::Serialize;
-use std::ops::Add;
 use uuid::Uuid;
-
-// TODO: Remove the Levels and just make it customizable in the /new endpoint
-pub enum Level {
-    Easy(u8),
-    Normal(u8),
-    Hard(u8),
-}
-
-impl From<u8> for Level {
-    fn from(level: u8) -> Self {
-        match level {
-            1..=3 => Level::Easy(level),
-            4..=6 => Level::Normal(level),
-            7..=9 => Level::Hard(level),
-            _ => Level::Easy(1),
-        }
-    }
-}
 
 #[derive(Serialize, Clone, Debug)]
 pub struct Captcha {
@@ -30,34 +14,54 @@ pub struct Captcha {
     image: Vec<u8>,
     #[serde(skip_serializing)]
     code: String,
+
     id: String,
     expire_time: DateTime<Utc>,
 }
 
 impl Captcha {
-    pub async fn new(level: Level, config: &HashMap<ConfigKey, ConfigValue>) -> Self {
-        let difficulty = match &level {
-            Level::Easy(_) => Difficulty::Easy,
-            Level::Normal(_) => Difficulty::Medium,
-            Level::Hard(_) => Difficulty::Hard,
-        };
+    pub fn new(
+        config: &HashMap<ConfigKey, ConfigValue>,
+        length: Option<u32>,
+        width: Option<u32>,
+        height: Option<u32>,
 
-        // Name is based on the inner value u8 of the enum
-        let name_id = match level {
-            Level::Easy(n) => n,
-            Level::Normal(n) => n,
-            Level::Hard(n) => n,
-        };
+        // Filters
+        dots: Option<Vec<Dots>>,
+        grids: Option<Vec<Grid>>,
+        waves: Option<Vec<Wave>>,
+        noises: Option<Vec<Noise>>,
+    ) -> Self {
+        let mut captcha = captcha::Captcha::new();
 
-        let name = match name_id {
-            1 | 4 | 7 => CaptchaName::Amelia,
-            2 | 5 | 8 => CaptchaName::Lucy,
-            3 | 6 | 9 => CaptchaName::Mila,
-            _ => unreachable!(),
-        };
+        let length = length.unwrap_or(conf_get!(&config, "CAPTCHA_LENGTH", u32));
+        captcha.add_chars(length);
 
-        let captcha = captcha::by_name(difficulty, name);
-        let code = captcha.chars().iter().collect::<String>();
+        let dots = dots.unwrap_or(vec![]);
+        for dot in dots {
+            captcha.apply_filter(dot);
+        }
+
+        let grids = grids.unwrap_or(vec![]);
+        for grid in grids {
+            captcha.apply_filter(grid);
+        }
+
+        let waves = waves.unwrap_or(vec![]);
+        for wave in waves {
+            captcha.apply_filter(wave);
+        }
+
+        let noises = noises.unwrap_or(vec![]);
+        for noise in noises {
+            captcha.apply_filter(noise);
+        }
+
+        let width = width.unwrap_or(conf_get!(&config, "CAPTCHA_WIDTH", u32));
+        let height = height.unwrap_or(conf_get!(&config, "CAPTCHA_HEIGHT", u32));
+        captcha.view(width, height);
+
+        let code = captcha.chars_as_string();
         let image = captcha.as_png().expect("Failed to generate captcha image");
 
         let id =

@@ -1,5 +1,5 @@
 mod captcha;
-pub use captcha::{Captcha, Level};
+pub use captcha::Captcha;
 
 mod routes;
 pub use routes::{

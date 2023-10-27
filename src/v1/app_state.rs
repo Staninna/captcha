@@ -1,6 +1,8 @@
 use super::Captcha;
+use crate::{conf_get, conf_set};
 use hashbrown::HashMap;
 use rocket::tokio::sync::RwLock;
+use url::Url;
 
 type CaptchaId = String;
 type CaptchaUrl = String;
@@ -23,21 +25,17 @@ impl AppState {
         dotenv::dotenv().ok();
 
         let mut config = HashMap::new();
-        let auth_token = dotenv::var("AUTH_TOKEN").expect("AUTH_TOKEN must be set");
-        config.insert("AUTH_TOKEN".to_string(), auth_token.clone());
-        let base_url = dotenv::var("BASE_URL").expect("BASE_URL must be set");
-        config.insert("BASE_URL".to_string(), base_url.clone());
-        let captcha_expire_time = dotenv::var("CAPTCHA_EXPIRE_TIME")
-            .expect("CAPTCHA_EXPIRE_TIME must be set")
-            .parse::<i64>()
-            .expect("CAPTCHA_EXPIRE_TIME must be an integer");
-        config.insert(
-            "CAPTCHA_EXPIRE_TIME".to_string(),
-            captcha_expire_time.to_string(),
-        );
-        let captcha_level = dotenv::var("CAPTCHA_LEVEL").expect("CAPTCHA_LEVEL must be set");
-        config.insert("CAPTCHA_LEVEL".to_string(), captcha_level.clone());
+        conf_set!(config, "AUTH_TOKEN", String);
+        conf_set!(config, "BASE_URL", Url);
+        conf_set!(config, "CAPTCHA_EXPIRE_TIME", u64);
+        conf_set!(config, "CAPTCHA_LENGTH", usize);
+        conf_set!(config, "CAPTCHA_WIDTH", usize);
+        conf_set!(config, "CAPTCHA_HEIGHT", usize);
 
+        dbg!(&config);
+        // dbg url
+        dbg!(conf_get!(config, "BASE_URL", Url));
+        let auth_token = conf_get!(config, "AUTH_TOKEN", String);
         let captchas = HashMap::new();
         let urls = HashMap::new();
 

@@ -1,4 +1,4 @@
-use super::{captcha::Level, AppStatePointer, Captcha, Response};
+use super::{AppStatePointer, Captcha, Response};
 use crate::conf_get;
 use rocket::{get, post, response::Responder, serde::json::Json, State};
 use uuid::Uuid;
@@ -8,10 +8,13 @@ use uuid::Uuid;
 pub struct CaptchaImage(pub Vec<u8>);
 
 // Create a new captcha
-#[get("/new?<level>&<auth>")]
+// TODO: Add way to specify filters
+#[get("/new?<len>&<width>&<height>&<auth>")]
 pub async fn new_captcha(
     auth: String,
-    level: Option<u32>,
+    len: Option<u32>,
+    width: Option<u32>,
+    height: Option<u32>,
     app_state: &State<AppStatePointer>,
 ) -> Result<Json<Captcha>, Json<Response>> {
     let mut app_state = app_state.write().await;
@@ -26,26 +29,7 @@ pub async fn new_captcha(
     };
 
     let config = app_state.config();
-    let captcha_level = conf_get!(&config, "CAPTCHA_LEVEL", u8);
-    let captcha_level = Level::from(captcha_level);
-
-    let level = match level {
-        Some(level) => match level {
-            1..=3 => Level::Easy(level as u8),
-            4..=6 => Level::Normal(level as u8),
-            7..=9 => Level::Hard(level as u8),
-            _ => {
-                let mut response = Response::new();
-                response.set_error("Invalid captcha level");
-
-                return Err(Json(response));
-            }
-        },
-        None => captcha_level,
-    };
-
-    let config = app_state.config();
-    let captcha = Captcha::new(level, config).await;
+    let captcha = Captcha::new(config, len, width, height, None, None, None, None);
 
     app_state.add_captcha(captcha.clone());
 
@@ -238,12 +222,9 @@ Create a New Captcha
     - A Captcha object with the captcha image id and expiration time
     - A error message
   - Parameters:
-    - level: Difficulty level of the captcha: (Optional)
-      | Level | Description |
-      | ----- | ----------- |
-      | 1-3   | Easy        |
-      | 4-6   | Normal      |
-      | 7-9   | Hard        |
+    - length: Length of the captcha code  (Optional)
+    - width: Width of the captcha image   (Optional)
+    - height: Height of the captcha image (Optional)
     - auth_token: Your auth token
 
 Get Captcha Image
