@@ -8,7 +8,6 @@ use uuid::Uuid;
 pub struct CaptchaImage(pub Vec<u8>);
 
 // Create a new captcha
-// TODO: Add way to specify filters
 #[get("/new?<len>&<width>&<height>&<filters>&<auth>")]
 pub async fn new_captcha(
     auth: String,
@@ -36,8 +35,10 @@ pub async fn new_captcha(
 
             if let Err(err) = result {
                 let mut response = Response::new();
-                response.set_error(&format!("Failed to parse filters: {}", err));
-                return Err(Json(response));
+                if !err.is_empty() {
+                    response.set_error(&format!("Failed to parse filters: {}", err));
+                    return Err(Json(response));
+                }
             }
 
             Some(filters_obj)
