@@ -244,8 +244,7 @@ Create a New Captcha
     - width: Width of the captcha image              (Optional)
     - height: Height of the captcha image            (Optional)
     - filters: Filters to apply to the captcha image (Optional)
-               // TODO: Add more information about filters
-               see /api/v1/filters for more information on filters
+               see /api/v1/help/filters for more information on filters
     - auth_token: Your auth token
 
 Get Captcha Image
@@ -284,4 +283,45 @@ API Help
   - Description: Returns this help message
 
 Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
+}
+
+// Returns documentation for filters
+#[get("/help/filters")]
+pub async fn filter_docs() -> &'static str {
+    "Filters Documentation
+
+Welcome to the documentation for filters. This documentation provides information on the filters how filters are formatted and how to use them.
+
+Filters are used to add noise to the captcha image. The filter string is a semicolon-separated list of filters. Each filter is a colon-separated list of the filter type and the filter arguments. The filter arguments are comma-separated.
+<filter_type>:<filter_arg1>,<filter_arg2>,<filter_arg3>;...
+
+The following filters are available:
+  - dot: Adds dots to the image
+    - Arguments:
+      - n: Number of dots to add
+  - grid: Adds a grid to the image
+    - Arguments:
+      - x_gap: Horizontal gap between grid lines
+      - y_gap: Vertical gap between grid lines
+  - wave: Adds a wave to the image
+    - Arguments:
+      - f: Frequency of the wave
+      - amp: Amplitude of the wave
+      - direction: Direction of the wave (v/h)
+  - noise: Adds noise to the image
+    - Arguments:
+      - prob: Probability of a pixel being set to black
+
+Example's
+  - Add 10 dots to the image:
+    - dot:10
+  - Add a grid with a horizontal gap of 10 and a vertical gap of 5:
+    - grid:10,5
+  - Add a wave with a frequency of 0.1 and an amplitude of 5:
+    - wave:0.1,5,v
+  - Add noise with a probability of 0.1:
+    - noise:0.1
+  - Add 10 dots, a grid with a horizontal gap of 10 and a vertical gap of 5, a wave with a frequency of 0.1 and an amplitude of 5, and noise with a probability of 0.1:
+    - dot:10;grid:10,5;wave:0.1,5,v;noise:0.1
+"
 }

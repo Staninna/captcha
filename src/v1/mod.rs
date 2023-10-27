@@ -3,7 +3,8 @@ pub use captcha::Captcha;
 
 mod routes;
 pub use routes::{
-    captcha_image, captcha_image_url, captcha_image_url_redirect, help, new_captcha, verify_captcha,
+    captcha_image, captcha_image_url, captcha_image_url_redirect, filter_docs, help, new_captcha,
+    verify_captcha,
 };
 
 mod response;
