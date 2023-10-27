@@ -33,6 +33,7 @@ impl Filters {
             if splitted.len() != 2 {
                 return Err(format!("Invalid filter format: {}", filter));
             }
+
             let filter_type = splitted[0];
             let filter_args = splitted[1].split(',').collect::<Vec<&str>>();
 
