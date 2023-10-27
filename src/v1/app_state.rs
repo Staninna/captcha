@@ -32,9 +32,6 @@ impl AppState {
         conf_set!(config, "CAPTCHA_WIDTH", usize);
         conf_set!(config, "CAPTCHA_HEIGHT", usize);
 
-        dbg!(&config);
-        // dbg url
-        dbg!(conf_get!(config, "BASE_URL", Url));
         let auth_token = conf_get!(config, "AUTH_TOKEN", String);
         let captchas = HashMap::new();
         let urls = HashMap::new();
