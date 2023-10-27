@@ -1,11 +1,9 @@
-use std::ops::Add;
-
-use super::{ConfigKey, ConfigValue};
+use super::{ConfigKey, ConfigValue, Filters};
 use crate::conf_get;
-use captcha::filters::{Dots, Grid, Noise, Wave};
 use chrono::{DateTime, Duration, Utc};
 use hashbrown::HashMap;
 use serde::Serialize;
+use std::ops::Add;
 use uuid::Uuid;
 
 // TODO: By default generate a url and store it in the captcha struct
@@ -28,36 +26,26 @@ impl Captcha {
         length: Option<u32>,
         width: Option<u32>,
         height: Option<u32>,
-
-        // Filters
-        dots: Option<Vec<Dots>>,
-        grids: Option<Vec<Grid>>,
-        waves: Option<Vec<Wave>>,
-        noises: Option<Vec<Noise>>,
+        filters: Option<Filters>,
     ) -> Self {
         let mut captcha = captcha::Captcha::new();
 
         let length = length.unwrap_or(conf_get!(&config, "CAPTCHA_LENGTH", u32));
         captcha.add_chars(length);
 
-        let dots = dots.unwrap_or(vec![]);
-        for dot in dots {
-            captcha.apply_filter(dot);
-        }
-
-        let grids = grids.unwrap_or(vec![]);
-        for grid in grids {
-            captcha.apply_filter(grid);
-        }
-
-        let waves = waves.unwrap_or(vec![]);
-        for wave in waves {
-            captcha.apply_filter(wave);
-        }
-
-        let noises = noises.unwrap_or(vec![]);
-        for noise in noises {
-            captcha.apply_filter(noise);
+        if let Some(filters) = filters {
+            for dot in filters.dots {
+                captcha.apply_filter(dot);
+            }
+            for grid in filters.grids {
+                captcha.apply_filter(grid);
+            }
+            for wave in filters.waves {
+                captcha.apply_filter(wave);
+            }
+            for noise in filters.noises {
+                captcha.apply_filter(noise);
+            }
         }
 
         let width = width.unwrap_or(conf_get!(&config, "CAPTCHA_WIDTH", u32));

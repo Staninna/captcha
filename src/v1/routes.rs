@@ -1,4 +1,4 @@
-use super::{AppStatePointer, Captcha, Response};
+use super::{AppStatePointer, Captcha, Filters, Response};
 use crate::conf_get;
 use rocket::{get, post, response::Responder, serde::json::Json, State};
 use uuid::Uuid;
@@ -9,12 +9,13 @@ pub struct CaptchaImage(pub Vec<u8>);
 
 // Create a new captcha
 // TODO: Add way to specify filters
-#[get("/new?<len>&<width>&<height>&<auth>")]
+#[get("/new?<len>&<width>&<height>&<filters>&<auth>")]
 pub async fn new_captcha(
     auth: String,
     len: Option<u32>,
     width: Option<u32>,
     height: Option<u32>,
+    filters: Option<String>,
     app_state: &State<AppStatePointer>,
 ) -> Result<Json<Captcha>, Json<Response>> {
     let mut app_state = app_state.write().await;
@@ -28,8 +29,24 @@ pub async fn new_captcha(
         }
     };
 
+    let filters = match filters {
+        Some(filters) => {
+            let mut filters_obj = Filters::new();
+            let result = filters_obj.parse(&filters);
+
+            if let Err(err) = result {
+                let mut response = Response::new();
+                response.set_error(&format!("Failed to parse filters: {}", err));
+                return Err(Json(response));
+            }
+
+            Some(filters_obj)
+        }
+        None => None,
+    };
+
     let config = app_state.config();
-    let captcha = Captcha::new(config, len, width, height, None, None, None, None);
+    let captcha = Captcha::new(config, len, width, height, filters);
 
     app_state.add_captcha(captcha.clone());
 
