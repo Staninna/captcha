@@ -1,3 +1,7 @@
+<!-- TODO: Add badges -->
+<!-- TODO: Create logo -->
+<!-- TODO: Add docker support/image -->
+
 # Captcha
 
 This is a simple captcha-API that can be used to generate captchas and validate them. It is written in Rust and uses the [Rocket](https://rocket.rs/) framework the captcha is generated using the [captcha](https://crates.io/crates/captcha) crate.
@@ -8,6 +12,7 @@ In order to install the captcha-API, you need to have [Rust](https://www.rust-la
 
 There is alse a example app written in PHP that uses the captcha-API. To run this example app, you need to have [PHP](https://www.php.net/) installed. Then, run `php -S localhost:8001`. This will start a webserver on port 8001. Then run the captcha-API as described above(`cargo build --release`, `target/release/captcha`). You can then open `http://localhost:8001/` in your browser to see the example app.
 
+<!-- TODO: Update docs -->
 ## Usage
 
 ### Generate a captcha

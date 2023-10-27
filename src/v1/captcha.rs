@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 // TODO: By default generate a url and store it in the captcha struct
 //       so that the user has a url to access the image and don't have
-//       to request it from the server
+//       to request it from the server so remove also the /image and /image_url endpoints
 #[derive(Serialize, Clone, Debug)]
 pub struct Captcha {
     #[serde(skip_serializing)]
@@ -33,17 +33,22 @@ impl Captcha {
         let length = length.unwrap_or(conf_get!(&config, "CAPTCHA_LENGTH", u32));
         captcha.add_chars(length);
 
+        // TODO: Keep order given in the filter string
         if let Some(filters) = filters {
             for dot in filters.dots {
+                dbg!("applying filter dot");
                 captcha.apply_filter(dot);
             }
             for grid in filters.grids {
+                dbg!("applying filter grid");
                 captcha.apply_filter(grid);
             }
             for wave in filters.waves {
+                dbg!("applying filter wave");
                 captcha.apply_filter(wave);
             }
             for noise in filters.noises {
+                dbg!("applying filter noise");
                 captcha.apply_filter(noise);
             }
         }
