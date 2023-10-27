@@ -233,15 +233,18 @@ pub async fn help() -> &'static str {
 Welcome to the documentation for API v1. This API provides the following endpoints for managing captchas:
 
 Create a New Captcha
-  - Endpoint: GET /api/v1/new&auth=<auth_token>&level=<level>
+  - Endpoint: GET /api/v1/new&auth=<auth_token>&len=<length>&width=<width>&height=<height>&filters=<filters>
   - Description: Creates a new captcha with the given length
   - Returns:
     - A Captcha object with the captcha image id and expiration time
     - A error message
   - Parameters:
-    - length: Length of the captcha code  (Optional)
-    - width: Width of the captcha image   (Optional)
-    - height: Height of the captcha image (Optional)
+    - length: Length of the captcha code             (Optional)
+    - width: Width of the captcha image              (Optional)
+    - height: Height of the captcha image            (Optional)
+    - filters: Filters to apply to the captcha image (Optional)
+               // TODO: Add more information about filters
+               see /api/v1/filters for more information on filters
     - auth_token: Your auth token
 
 Get Captcha Image
