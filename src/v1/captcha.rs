@@ -8,6 +8,9 @@ use hashbrown::HashMap;
 use serde::Serialize;
 use uuid::Uuid;
 
+// TODO: By default generate a url and store it in the captcha struct
+//       so that the user has a url to access the image and don't have
+//       to request it from the server
 #[derive(Serialize, Clone, Debug)]
 pub struct Captcha {
     #[serde(skip_serializing)]
