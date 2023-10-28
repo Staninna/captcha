@@ -5,7 +5,7 @@ use rocket::tokio::sync::RwLock;
 use url::Url;
 
 type CaptchaId = String;
-type CaptchaUrl = String;
+type CaptchaUrlId = String;
 type AuthToken = String;
 
 pub type ConfigKey = String;
@@ -15,7 +15,7 @@ pub type AppStatePointer = RwLock<AppState>;
 pub struct AppState {
     auth_token: AuthToken,
     captchas: HashMap<CaptchaId, Captcha>,
-    urls: HashMap<CaptchaUrl, CaptchaId>,
+    urls: HashMap<CaptchaUrlId, CaptchaId>,
 
     config: HashMap<ConfigKey, ConfigValue>,
 }
@@ -74,15 +74,32 @@ impl AppState {
         }
 
         for url in urls_to_remove {
-            self.urls.remove(&url);
+            self.remove_url(&url);
         }
     }
 
-    pub fn urls(&self) -> &HashMap<CaptchaUrl, CaptchaId> {
+    pub fn urls(&self) -> &HashMap<CaptchaUrlId, CaptchaId> {
         &self.urls
     }
 
-    pub fn add_url(&mut self, url: &str, captcha_id: &str) {
-        self.urls.insert(captcha_id.to_string(), url.to_string());
+    pub fn add_url(&mut self, url_id: &str, captcha_id: &str) {
+        self.urls.insert(url_id.to_string(), captcha_id.to_string());
+    }
+
+    pub fn remove_url(&mut self, url_id: &str) {
+        self.urls.remove(url_id);
+    }
+
+    pub fn clear_expired(&mut self) {
+        let mut captchas_to_remove = Vec::new();
+        for (id, captcha) in &self.captchas {
+            if captcha.expired() {
+                captchas_to_remove.push(id.to_string());
+            }
+        }
+
+        for id in captchas_to_remove {
+            self.remove_captcha(&id);
+        }
     }
 }

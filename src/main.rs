@@ -1,6 +1,5 @@
 use crate::v1::{
-    captcha_image, captcha_image_url, captcha_image_url_redirect, filter_docs, help, new_captcha,
-    verify_captcha, AppState,
+    captcha_image_url_redirect, filter_docs, help, new_captcha, verify_captcha, AppState,
 };
 use rocket::{get, launch, routes};
 
@@ -16,8 +15,6 @@ fn rocket() -> _ {
                 help,
                 new_captcha,
                 verify_captcha,
-                captcha_image,
-                captcha_image_url,
                 captcha_image_url_redirect,
                 filter_docs
             ],

@@ -33,8 +33,4 @@ impl Response {
     pub fn set_warning(&mut self, warning: &str) {
         self.warning = Some(warning.to_string());
     }
-
-    pub fn set_url(&mut self, url: &str) {
-        self.url = Some(url.to_string());
-    }
 }
