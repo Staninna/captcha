@@ -5,7 +5,6 @@ use rocket::{get, post, response::Responder, serde::json::Json, State};
 #[response(status = 200, content_type = "image/png")]
 pub struct CaptchaImage(pub Vec<u8>);
 
-// Create a new captcha
 #[get("/new?<len>&<width>&<height>&<filters>&<auth>")]
 pub async fn new_captcha(
     auth: String,
@@ -86,7 +85,6 @@ pub async fn captcha_image_url_redirect(
     Some(CaptchaImage(captcha.image().clone()))
 }
 
-// Verify the captcha code
 #[post("/verify?<id>&<code>&<auth>")]
 pub async fn verify_captcha(
     id: String,

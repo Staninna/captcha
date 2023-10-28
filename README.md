@@ -30,6 +30,7 @@ All optional parameters have default values defined in the [.env](.env) file.
 - `width`: The captcha image's width (optional).
 - `height`: The captcha image's height (optional).
 - `filters`: Filters to apply to the captcha image (optional).
+More information about filters can be found in the [Filters](#filters) section.
 
 The response will be a JSON object like this:
 
@@ -45,11 +46,11 @@ The response will be a JSON object like this:
 
 To validate a captcha, send a `POST` request to `/api/v1/verify` with the following query parameters:
 
-- `id`: The captcha image ID obtained from the `/api/v1/new` endpoint.
+- `id`: The captcha ID obtained from the `/api/v1/new` endpoint.
 - `auth`: The authentication token.
 - `code`: The captcha code.
 
-The response will be a JSON object with a message indicating whether the captcha was valid ("ok"), raised a warning ("warn"), or encountered an error ("error").
+The response will be a JSON object with a message indicating whether the captcha was valid or not ("ok"), raised a warning ("warn"), or encountered an error ("error").
 
 ### Filters
 
