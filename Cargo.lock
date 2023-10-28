@@ -197,10 +197,8 @@ dependencies = [
  "chrono",
  "dotenv",
  "hashbrown 0.14.2",
- "lazy_static",
  "rocket",
  "serde",
- "serde_json",
  "url",
  "uuid",
 ]
