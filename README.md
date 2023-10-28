@@ -1,7 +1,3 @@
-<!-- TODO: Add badges -->
-<!-- TODO: Create logo -->
-<!-- TODO: Add docker support/image -->
-
 # Captcha
 
 Welcome to the Captcha API, a simple tool for generating and validating captchas. This API is written in Rust and powered by the [Rocket](https://rocket.rs/) framework, utilizing the [captcha](https://crates.io/crates/captcha) crate for captcha generation.
