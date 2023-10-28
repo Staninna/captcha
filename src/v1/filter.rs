@@ -1,11 +1,19 @@
 use captcha::filters::{Dots as Dot, Grid, Noise, Wave};
 
-// TODO: Make so filters are applied in order of the `filter_str` argument to `Filters::parse`.
+#[derive(Debug)]
+enum FilterType {
+    Dot,
+    Grid,
+    Wave,
+    Noise,
+}
+
 pub struct Filters {
-    pub dots: Vec<Dot>,
-    pub grids: Vec<Grid>,
-    pub waves: Vec<Wave>,
-    pub noises: Vec<Noise>,
+    dots: Vec<Dot>,
+    grids: Vec<Grid>,
+    waves: Vec<Wave>,
+    noises: Vec<Noise>,
+    order: Vec<FilterType>,
 }
 
 impl Filters {
@@ -15,9 +23,39 @@ impl Filters {
             grids: Vec::new(),
             waves: Vec::new(),
             noises: Vec::new(),
+            order: Vec::new(),
         };
         filters.parse(filter_str)?;
         Ok(filters)
+    }
+
+    pub fn next_filter(&mut self, captcha: &mut captcha::Captcha) -> Result<(), String> {
+        if self.order.is_empty() {
+            return Err("No more filters to apply".to_string());
+        }
+
+        let filter_type = self.order.remove(0);
+        dbg!(&filter_type);
+        match filter_type {
+            FilterType::Dot => {
+                let dot = self.dots.remove(0);
+                captcha.apply_filter(dot);
+            }
+            FilterType::Grid => {
+                let grid = self.grids.remove(0);
+                captcha.apply_filter(grid);
+            }
+            FilterType::Wave => {
+                let wave = self.waves.remove(0);
+                captcha.apply_filter(wave);
+            }
+            FilterType::Noise => {
+                let noise = self.noises.remove(0);
+                captcha.apply_filter(noise);
+            }
+        }
+
+        Ok(())
     }
 
     fn parse(&mut self, filter_str: &str) -> Result<(), String> {
@@ -25,6 +63,7 @@ impl Filters {
         let mut grids = Vec::new();
         let mut waves = Vec::new();
         let mut noises = Vec::new();
+        let mut order = Vec::new();
 
         let filters = filter_str.split(';').collect::<Vec<&str>>();
         for filter in filters {
@@ -53,6 +92,7 @@ impl Filters {
                         .map_err(|e| format!("Failed to parse 'dot' argument: {}", e))?;
                     let dot = Dot::new(n);
                     dots.push(dot);
+                    order.push(FilterType::Dot);
                 }
                 "grid" => {
                     if filter_args.len() != 2 {
@@ -69,6 +109,7 @@ impl Filters {
                         .map_err(|e| format!("Failed to parse 'grid' Y argument: {}", e))?;
                     let grid = Grid::new(x_gap, y_gap);
                     grids.push(grid);
+                    order.push(FilterType::Grid);
                 }
                 "wave" => {
                     if filter_args.len() != 3 {
@@ -91,6 +132,7 @@ impl Filters {
                         _ => return Err(format!("Unknown wave direction: {}", direction)),
                     };
                     waves.push(wave);
+                    order.push(FilterType::Wave);
                 }
                 "noise" => {
                     if filter_args.len() != 1 {
@@ -104,6 +146,7 @@ impl Filters {
                         .map_err(|e| format!("Failed to parse 'noise' argument: {}", e))?;
                     let noise = Noise::new(prob);
                     noises.push(noise);
+                    order.push(FilterType::Noise);
                 }
                 _ => return Err(format!("Unknown filter type: {}", filter_type)),
             }
@@ -113,6 +156,7 @@ impl Filters {
         self.grids = grids;
         self.waves = waves;
         self.noises = noises;
+        self.order = order;
 
         Ok(())
     }

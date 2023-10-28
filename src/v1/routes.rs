@@ -28,7 +28,7 @@ pub async fn new_captcha(
         }
     };
 
-    let filters = match filters {
+    let mut filters = match filters {
         Some(filters) => {
             let filters_obj = Filters::new(&filters);
 
@@ -46,7 +46,7 @@ pub async fn new_captcha(
     };
 
     let config = app_state.config();
-    let captcha = Captcha::new(config, len, width, height, filters);
+    let captcha = Captcha::new(config, len, width, height, filters.as_mut());
 
     let url = captcha.url();
     let url_id = url.split("/").last().unwrap().to_string();

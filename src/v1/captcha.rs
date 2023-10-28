@@ -24,7 +24,7 @@ impl Captcha {
         length: Option<u32>,
         width: Option<u32>,
         height: Option<u32>,
-        filters: Option<Filters>,
+        filters: Option<&mut Filters>,
     ) -> Self {
         let mut captcha = captcha::Captcha::new();
 
@@ -32,18 +32,7 @@ impl Captcha {
         captcha.add_chars(length);
 
         if let Some(filters) = filters {
-            for dot in filters.dots {
-                captcha.apply_filter(dot);
-            }
-            for grid in filters.grids {
-                captcha.apply_filter(grid);
-            }
-            for wave in filters.waves {
-                captcha.apply_filter(wave);
-            }
-            for noise in filters.noises {
-                captcha.apply_filter(noise);
-            }
+            while let Ok(_) = filters.next_filter(&mut captcha) {}
         }
 
         let width = width.unwrap_or(conf_get!(&config, "CAPTCHA_WIDTH", u32));
