@@ -4,112 +4,93 @@
 
 # Captcha
 
-This is a simple captcha-API that can be used to generate captchas and validate them. It is written in Rust and uses the [Rocket](https://rocket.rs/) framework the captcha is generated using the [captcha](https://crates.io/crates/captcha) crate.
+Welcome to the Captcha API, a simple tool for generating and validating captchas. This API is written in Rust and powered by the [Rocket](https://rocket.rs/) framework, utilizing the [captcha](https://crates.io/crates/captcha) crate for captcha generation.
 
 ## Installation
 
-In order to install the captcha-API, you need to have [Rust](https://www.rust-lang.org/) installed. Then, clone this repository and run `cargo build --release`. This will create an executable in `target/release/captcha`. You can then run this executable to start the captcha-API.
+To set up the Captcha API, ensure you have [Rust](https://www.rust-lang.org/) installed. Then, follow these steps:
 
-There is alse a example app written in PHP that uses the captcha-API. To run this example app, you need to have [PHP](https://www.php.net/) installed. Then, run `php -S localhost:8001`. This will start a webserver on port 8001. Then run the captcha-API as described above(`cargo build --release`, `target/release/captcha`). You can then open `http://localhost:8001/` in your browser to see the example app.
+1. Clone this repository.
+2. Run `cargo build --release` to build the API executable, which will be located in `target/release/captcha`.
+3. Start the Captcha API by running the executable.
+
+Additionally, there is an example app written in PHP that demonstrates the usage of the Captcha API. To run this example app:
+
+1. Make sure you have [PHP](https://www.php.net/) installed.
+2. Run `php -S localhost:8001` to start a web server on port 8001.
+3. Follow the previous steps to run the Captcha API using `cargo build --release` and `target/release/captcha`.
+4. Access the example app by opening `http://localhost:8001/` in your web browser.
 
 ## Usage
 
-### Generate a captcha
+### Generating a Captcha
 
-To generate a captcha, send a `GET` request to `/api/v1/new`. With the following query parameters:
+To create a captcha, make a `GET` request to `/api/v1/new` with the following query parameters:
+
+All optional parameters have default values defined in the [.env](.env) file.
 
 - `auth`: The authentication token.
-- `len`: The length of the captcha code.                (Optional)
-- `width`: The width of the captcha image.              (Optional)
-- `height`: The height of the captcha image.            (Optional)
-- `filters`: The filters to apply to the captcha image. (Optional)
-All optional parameters have a default value defined in the [.env](.env) file.
+- `len`: The captcha code's length (optional).
+- `width`: The captcha image's width (optional).
+- `height`: The captcha image's height (optional).
+- `filters`: Filters to apply to the captcha image (optional).
 
-The response will be a JSON object with the following structure or an error message:
+The response will be a JSON object like this:
 
 ```json
 {
-    "id":"8c6b00702ab445f29b25e8d09d0734c8c848a75d7dcd4ec19cae8c238836cf17",
-    "expire_time":"2023-10-28T11:21:10.037393300Z",
-    "url":"http://localhost:8000/api/v1/img/9ecdcd60-3148-49ae-8313-e820c8fcd713"
+    "id": "8c6b00702ab445f29b25e8d09d0734c8c848a75d7dcd4ec19cae8c238836cf17",
+    "expire_time": "2023-10-28T11:21:10.037393300Z",
+    "url": "http://localhost:8000/api/v1/img/9ecdcd60-3148-49ae-8313-e820c8fcd713"
 }
 ```
 
-### Validate a captcha
+### Validating a Captcha
 
-To validate a captcha, send a `POST` request to `/api/v1/verify`. With the following query parameters:
+To validate a captcha, send a `POST` request to `/api/v1/verify` with the following query parameters:
 
-- `id`: The image id of the captcha. Got from the `/api/v1/new` endpoint.
+- `id`: The captcha image ID obtained from the `/api/v1/new` endpoint.
 - `auth`: The authentication token.
-- `code`: The code of the captcha.
+- `code`: The captcha code.
 
-The response will be a JSON object with a message indicating whether the captcha was valid or not. ("ok", "warn" or "error")
-
-```json
-{
-    "ok": "ok msg",
-    "warn": "warn msg",
-    "error": "error msg"
-}
-```
+The response will be a JSON object with a message indicating whether the captcha was valid ("ok"), raised a warning ("warn"), or encountered an error ("error").
 
 ### Filters
 
-Filters can be used to modify the captcha image. To make it harder for bots to solve the captcha.
-
-The following filters are available:
+Filters can be applied to modify the captcha image and make it more challenging for bots to solve. Available filters include:
 
 - `dot`: Adds dots to the image.
-  Arguments:
-  - `n`: The number of dots to add.
 - `grid`: Adds a grid to the image.
-    Arguments:
-  - `x_gap`: The horizontal gap between the grid lines.
-  - `y_gap`: The vertical gap between the grid lines.
 - `wave`: Adds a wave to the image.
-    Arguments:
-  - `f`: The frequency of the wave.
-  - `amp`: The amplitude of the wave.
-  - `dir`: The direction of the wave. (h or v)
 - `noise`: Adds noise to the image.
-    Arguments:
-  - `prob`: The probability of a pixel being set to black.
 
-### Filter syntax
+### Filter Syntax
 
-The filters are applied in the order they are specified in the `filters` query parameter. The syntax for the `filters` query parameter is as follows:
-
-Begin with a filter name, followed by a colon and then the arguments for the filter. The arguments are separated by commas. Multiple filters are separated by semicolons.
+Filters are applied in the order they are specified in the `filters` query parameter, using the following syntax:
 
 ```txt
 filter1:arg1,arg2,arg3;filter2:arg1,arg2;filter3:arg1,...
 ```
 
-Keep in mind that the `filters` query parameter needs to be valid otherwise the captcha-API will return an error message. The following are valid examples of the `filters` query parameter
+Please note that the `filters` query parameter must be valid; otherwise, the Captcha API will return an error message. Here are some valid examples of the `filters` query parameter:
 
-#### Filter examples
+#### Filter Examples
 
-```txt
-
-
-```txt
-dot:10
-grid:10,10
-wave:10,10,h
-noise:0.1
-dot:10;grid:10,10;wave:10,10,h;noise:0.1
-dot:10;grid:10,10;wave:10,10,h;noise:0.1;dot:10;grid:10,10;wave:10,10,h;noise:0.1
-```
+- `dot:10`
+- `grid:10,10`
+- `wave:10,10,h`
+- `noise:0.1`
+- `dot:10;grid:10,10;wave:10,10,h;noise:0.1`
 
 ## Configuration
 
-The captcha-API can be configured using the [.env](.env) file. The following options are available:
+You can configure the Captcha API using the [.env](.env) file, where you can set the following options:
 
 ```env
 # Authentication token
 AUTH_TOKEN=secret
 
-# Base url of the captcha-API
+# Base URL of the Captcha API
 BASE_URL=http://localhost:8000
 
 # Captcha settings
@@ -121,4 +102,4 @@ CAPTCHA_HEIGHT=100
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the MIT license. For more details, please read the [LICENSE](LICENSE) file.
