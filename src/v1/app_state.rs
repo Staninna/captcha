@@ -2,6 +2,7 @@ use super::Captcha;
 use crate::{conf_get, conf_set};
 use hashbrown::HashMap;
 use rocket::tokio::sync::RwLock;
+use std::net::IpAddr;
 use url::Url;
 
 type CaptchaId = String;
@@ -31,6 +32,8 @@ impl AppState {
         conf_set!(config, "CAPTCHA_LENGTH", usize);
         conf_set!(config, "CAPTCHA_WIDTH", usize);
         conf_set!(config, "CAPTCHA_HEIGHT", usize);
+        conf_set!(config, "PORT", u16);
+        conf_set!(config, "IP", IpAddr);
 
         let auth_token = conf_get!(config, "AUTH_TOKEN", String);
         let captchas = HashMap::new();

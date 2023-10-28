@@ -1,13 +1,20 @@
 use crate::v1::{
     captcha_image_url_redirect, filter_docs, help, new_captcha, verify_captcha, AppState,
 };
-use rocket::{get, launch, routes};
+use rocket::{get, launch, routes, Config};
 
 mod v1;
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
+    let app_state = AppState::new();
+    let app_config = app_state.read().await.config().clone();
+    let rocket_config = Config::figment()
+        .merge(("port", conf_get!(app_config, "PORT", i64)))
+        .merge(("address", conf_get!(app_config, "IP", String)));
+
     rocket::build()
+        .configure(rocket_config)
         .mount("/", routes![index])
         .mount(
             "/api/v1",
@@ -19,7 +26,7 @@ fn rocket() -> _ {
                 filter_docs
             ],
         )
-        .manage(AppState::new())
+        .manage(app_state)
 }
 
 #[get("/")]
