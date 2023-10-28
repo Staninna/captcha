@@ -1,5 +1,6 @@
 use captcha::filters::{Dots as Dot, Grid, Noise, Wave};
 
+// TODO: Make so filters are applied in order of the `filter_str` argument to `Filters::parse`.
 pub struct Filters {
     pub dots: Vec<Dot>,
     pub grids: Vec<Grid>,
