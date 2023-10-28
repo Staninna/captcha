@@ -28,8 +28,9 @@ fn index() -> &'static str {
 
 This API provides a simple way to generate captcha images for your website
 
-- To access API v1, navigate to /api/v1. For example, you can use endpoints like /api/v1/captcha/new
+- To access API v1, navigate to /api/v1. For example, you can use endpoints like /api/v1/new
 - Need help or information on available endpoints? Visit /api/v1/help
+- Need help with filters? Visit /api/v1/help/filters
 
 Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
 }
