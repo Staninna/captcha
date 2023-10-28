@@ -12,72 +12,113 @@ In order to install the captcha-API, you need to have [Rust](https://www.rust-la
 
 There is alse a example app written in PHP that uses the captcha-API. To run this example app, you need to have [PHP](https://www.php.net/) installed. Then, run `php -S localhost:8001`. This will start a webserver on port 8001. Then run the captcha-API as described above(`cargo build --release`, `target/release/captcha`). You can then open `http://localhost:8001/` in your browser to see the example app.
 
-<!-- TODO: Update docs -->
 ## Usage
 
 ### Generate a captcha
 
 To generate a captcha, send a `GET` request to `/api/v1/new`. With the following query parameters:
 
-- `level`: The difficulty level of the captcha. This is a value between 1-9. The difficulty level increases every 3 levels. The default value can be set in the `.env` file.
 - `auth`: The authentication token.
+- `len`: The length of the captcha code.                (Optional)
+- `width`: The width of the captcha image.              (Optional)
+- `height`: The height of the captcha image.            (Optional)
+- `filters`: The filters to apply to the captcha image. (Optional)
+All optional parameters have a default value defined in the [.env](.env) file.
 
 The response will be a JSON object with the following structure or an error message:
 
 ```json
 {
-    "image_id": "...",
-    "expire_time": 1234567890,
-}
-```
-
-### Get a captcha image
-
-To get a captcha image, send a `GET` request to `/api/v1/image`. With the following query parameters:
-
-- `id`: The image id of the captcha. Got from the `/api/v1/new` endpoint.
-- `auth`: The authentication token.
-
-The response will be the captcha image in PNG format.
-
-### Get a captcha image url
-
-To get a captcha image url, send a `GET` request to `/api/v1/image_url`. With the following query parameters:
-
-- `id`: The image id of the captcha.
-- `auth`: The authentication token.
-
-The response will be a JSON object with the following structure or an error message:
-
-```json
-{
-    "msg": "url",
+    "id":"8c6b00702ab445f29b25e8d09d0734c8c848a75d7dcd4ec19cae8c238836cf17",
+    "expire_time":"2023-10-28T11:21:10.037393300Z",
+    "url":"http://localhost:8000/api/v1/img/9ecdcd60-3148-49ae-8313-e820c8fcd713"
 }
 ```
 
 ### Validate a captcha
 
-To validate a captcha, send a `POST` request to `/api/v1/captcha/verify`. With the following query parameters:
+To validate a captcha, send a `POST` request to `/api/v1/verify`. With the following query parameters:
 
 - `id`: The image id of the captcha. Got from the `/api/v1/new` endpoint.
 - `auth`: The authentication token.
 - `code`: The code of the captcha.
 
-The response will be a JSON object with a message indicating whether the captcha was valid or not.
+The response will be a JSON object with a message indicating whether the captcha was valid or not. ("ok", "warn" or "error")
 
 ```json
 {
-    "msg": "message",
+    "ok": "ok msg",
+    "warn": "warn msg",
+    "error": "error msg"
 }
 ```
 
-## Example captchas
+### Filters
 
-| ![Amelia Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_easy.png) | ![Amelia Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_medium.png) | ![Amelia Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_amelia_hard.png) |
-| --- | --- | --- |
-| ![Lucy Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_easy.png) | ![Lucy Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_medium.png) | ![Lucy Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_lucy_hard.png) |
-| ![Mila Easy](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_easy.png) | ![Mila Medium](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_medium.png) | ![Mila Hard](https://github.com/daniel-e/captcha/raw/master/doc/captcha_mila_hard.png) |
+Filters can be used to modify the captcha image. To make it harder for bots to solve the captcha.
+
+The following filters are available:
+
+- `dot`: Adds dots to the image.
+  Arguments:
+  - `n`: The number of dots to add.
+- `grid`: Adds a grid to the image.
+    Arguments:
+  - `x_gap`: The horizontal gap between the grid lines.
+  - `y_gap`: The vertical gap between the grid lines.
+- `wave`: Adds a wave to the image.
+    Arguments:
+  - `f`: The frequency of the wave.
+  - `amp`: The amplitude of the wave.
+  - `dir`: The direction of the wave. (h or v)
+- `noise`: Adds noise to the image.
+    Arguments:
+  - `prob`: The probability of a pixel being set to black.
+
+### Filter syntax
+
+The filters are applied in the order they are specified in the `filters` query parameter. The syntax for the `filters` query parameter is as follows:
+
+Begin with a filter name, followed by a colon and then the arguments for the filter. The arguments are separated by commas. Multiple filters are separated by semicolons.
+
+```txt
+filter1:arg1,arg2,arg3;filter2:arg1,arg2;filter3:arg1,...
+```
+
+Keep in mind that the `filters` query parameter needs to be valid otherwise the captcha-API will return an error message. The following are valid examples of the `filters` query parameter
+
+#### Filter examples
+
+```txt
+
+
+```txt
+dot:10
+grid:10,10
+wave:10,10,h
+noise:0.1
+dot:10;grid:10,10;wave:10,10,h;noise:0.1
+dot:10;grid:10,10;wave:10,10,h;noise:0.1;dot:10;grid:10,10;wave:10,10,h;noise:0.1
+```
+
+## Configuration
+
+The captcha-API can be configured using the [.env](.env) file. The following options are available:
+
+```env
+# Authentication token
+AUTH_TOKEN=secret
+
+# Base url of the captcha-API
+BASE_URL=http://localhost:8000
+
+# Captcha settings
+CAPTCHA_EXPIRE_TIME=300 # 5 minutes in seconds
+CAPTCHA_LENGTH=6
+CAPTCHA_WIDTH=200
+CAPTCHA_HEIGHT=100
+```
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more details.
