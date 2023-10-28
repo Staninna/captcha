@@ -14,3 +14,10 @@ hashbrown = "0.14.2"
 captcha = "0.0.9"
 dotenv = "0.15.0"
 url = "2.4.1"
+
+# Premature optimization is the root of all evil
+[profile.release]
+opt-level = 3
+lto = true
+debug = false
+codegen-units = 1
