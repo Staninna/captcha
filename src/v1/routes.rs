@@ -177,7 +177,7 @@ API Help
   - Endpoint: GET /api/v1/help
   - Description: Returns this help message
 
-Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
+  If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
 }
 
 // Returns documentation for filters
@@ -218,5 +218,7 @@ Example's
     - noise:0.1
   - Add 10 dots, a grid with a horizontal gap of 10 and a vertical gap of 5, a wave with a frequency of 0.1 and an amplitude of 5, and noise with a probability of 0.1:
     - dot:10;grid:10,5;wave:0.1,5,v;noise:0.1
+
+If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues
 "
 }

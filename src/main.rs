@@ -32,7 +32,7 @@ This API provides a simple way to generate captcha images for your website
 - Need help or information on available endpoints? Visit /api/v1/help
 - Need help with filters? Visit /api/v1/help/filters
 
-Please note that this API is a work in progress, and your feedback is valuable to me. If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
+If you encounter any issues or have suggestions for improvement, please report them on GitHub: https://github.com/Staninna/captcha/issues"
 }
 
 #[macro_export]
