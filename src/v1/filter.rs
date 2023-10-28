@@ -9,16 +9,18 @@ pub struct Filters {
 }
 
 impl Filters {
-    pub fn new() -> Self {
-        Self {
+    pub fn new(filter_str: &str) -> Result<Self, String> {
+        let mut filters = Self {
             dots: Vec::new(),
             grids: Vec::new(),
             waves: Vec::new(),
             noises: Vec::new(),
-        }
+        };
+        filters.parse(filter_str)?;
+        Ok(filters)
     }
 
-    pub fn parse(&mut self, filter_str: &str) -> Result<(), String> {
+    fn parse(&mut self, filter_str: &str) -> Result<(), String> {
         let mut dots = Vec::new();
         let mut grids = Vec::new();
         let mut waves = Vec::new();

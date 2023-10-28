@@ -30,10 +30,9 @@ pub async fn new_captcha(
 
     let filters = match filters {
         Some(filters) => {
-            let mut filters_obj = Filters::new();
-            let result = filters_obj.parse(&filters);
+            let filters_obj = Filters::new(&filters);
 
-            if let Err(err) = result {
+            if let Err(err) = &filters_obj {
                 let mut response = Response::new();
                 if !err.is_empty() {
                     response.set_error(&format!("Failed to parse filters: {}", err));
@@ -41,7 +40,7 @@ pub async fn new_captcha(
                 }
             }
 
-            Some(filters_obj)
+            Some(filters_obj.unwrap())
         }
         None => None,
     };
