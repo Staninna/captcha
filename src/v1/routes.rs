@@ -112,7 +112,7 @@ pub async fn verify_captcha(
         Some(captcha) => captcha,
         None => {
             let mut response = Response::new();
-            response.set_warning("Captcha not found");
+            response.set_warn("Captcha not found");
 
             return Json(response);
         }
@@ -123,7 +123,7 @@ pub async fn verify_captcha(
             app_state.remove_captcha(&id);
 
             let mut response = Response::new();
-            response.set_warning("Captcha expired");
+            response.set_warn("Captcha expired");
 
             return Json(response);
         }
@@ -153,7 +153,7 @@ Create a New Captcha
   - Endpoint: GET /api/v1/new&auth=<auth_token>&len=<length>&width=<width>&height=<height>&filters=<filters>
   - Description: Creates a new captcha with the given length
   - Returns:
-    - A Captcha object with the captcha image id and expiration time
+    - A Captcha object with the captcha image id, expiration time and image url
     - A error message
   - Parameters:
     - length: Length of the captcha code             (Optional)
