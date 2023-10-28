@@ -24,7 +24,7 @@ function createNewCaptcha(
     $filters,
     $authToken = AUTH_TOKEN,
 ) {
-    $url = "/api/v1/new?auth=$authToken&length=$length&width=$width&height=$height&filters=$filters";
+    $url = "/api/v1/new?auth=$authToken&len=$length&width=$width&height=$height&filters=$filters";
     $response = getReqest($url);
     return $response;
 }
@@ -59,10 +59,18 @@ const CAPTCHA_FILTERS = null;
 session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Update session variables
-    if (isset($_GET['length']))  { $_SESSION['length']  = $_GET['length'];  }
-    if (isset($_GET['width']))   { $_SESSION['width']   = $_GET['width'];   }
-    if (isset($_GET['height']))  { $_SESSION['height']  = $_GET['height'];  }
-    if (isset($_GET['filters'])) { $_SESSION['filters'] = $_GET['filters']; }
+    if (isset($_GET['length'])) {
+        $_SESSION['length']  = $_GET['length'];
+    }
+    if (isset($_GET['width'])) {
+        $_SESSION['width']   = $_GET['width'];
+    }
+    if (isset($_GET['height'])) {
+        $_SESSION['height']  = $_GET['height'];
+    }
+    if (isset($_GET['filters'])) {
+        $_SESSION['filters'] = $_GET['filters'];
+    }
 
 
     // Generate new captcha
