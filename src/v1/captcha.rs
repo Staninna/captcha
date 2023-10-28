@@ -58,7 +58,7 @@ impl Captcha {
         let captcha_expire_time = config.get("CAPTCHA_EXPIRE_TIME").unwrap();
         let expire_time = Utc::now().add(Duration::seconds(captcha_expire_time.parse().unwrap()));
 
-        let url_id = Uuid::new_v4().to_string() + &Uuid::new_v4().to_string();
+        let url_id = Uuid::new_v4().to_string();
         let url = format!("{}api/v1/img/{}", config.get("BASE_URL").unwrap(), url_id);
 
         Self {
