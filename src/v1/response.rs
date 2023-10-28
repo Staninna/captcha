@@ -7,18 +7,15 @@ pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
     error: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    warning: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    url: Option<String>,
+    warn: Option<String>,
 }
 
 impl Response {
     pub fn new() -> Self {
         Self {
             ok: None,
+            warn: None,
             error: None,
-            warning: None,
-            url: None,
         }
     }
 
@@ -26,11 +23,11 @@ impl Response {
         self.ok = Some(ok.to_string());
     }
 
-    pub fn set_error(&mut self, error: &str) {
-        self.error = Some(error.to_string());
+    pub fn set_warn(&mut self, warning: &str) {
+        self.warn = Some(warning.to_string());
     }
 
-    pub fn set_warning(&mut self, warning: &str) {
-        self.warning = Some(warning.to_string());
+    pub fn set_error(&mut self, error: &str) {
+        self.error = Some(error.to_string());
     }
 }
