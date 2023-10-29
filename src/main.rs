@@ -1,3 +1,5 @@
+// TODO: Remove all the `unwrap`s, `expect`s, and `panic`s and replace them with proper error handling
+
 use crate::v1::{
     captcha_image_url_redirect, filter_docs, help, new_captcha, verify_captcha, AppState,
 };
