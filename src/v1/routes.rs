@@ -33,10 +33,9 @@ pub async fn new_captcha(
 
             if let Err(err) = &filters_obj {
                 let mut response = Response::new();
-                if !err.is_empty() {
-                    response.set_error(&format!("Failed to parse filters: {}", err));
-                    return Err(Json(response));
-                }
+                response.set_error(err);
+
+                return Err(Json(response));
             }
 
             Some(filters_obj.unwrap())
@@ -47,8 +46,27 @@ pub async fn new_captcha(
     let config = app_state.config();
     let captcha = Captcha::new(config, len, width, height, filters.as_mut());
 
+    let captcha = match captcha {
+        Ok(captcha) => captcha,
+        Err(err) => {
+            let mut response = Response::new();
+            response.set_error(&err);
+
+            return Err(Json(response));
+        }
+    };
+
     let url = captcha.url();
-    let url_id = url.split("/").last().unwrap().to_string();
+    let url_id = match url.split("/").last() {
+        Some(url_id) => url_id,
+        None => {
+            let mut response = Response::new();
+            response.set_error("Failed to get url id");
+
+            return Err(Json(response));
+        }
+    };
+
     app_state.add_url(&url_id, captcha.id());
 
     app_state.add_captcha(captcha.clone());

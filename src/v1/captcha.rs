@@ -25,7 +25,7 @@ impl Captcha {
         width: Option<u32>,
         height: Option<u32>,
         filters: Option<&mut Filters>,
-    ) -> Self {
+    ) -> Result<Self, String> {
         let mut captcha = captcha::Captcha::new();
 
         let length = length.unwrap_or(conf_get!(&config, "CAPTCHA_LENGTH", u32));
@@ -40,7 +40,10 @@ impl Captcha {
         captcha.view(width, height);
 
         let code = captcha.chars_as_string();
-        let image = captcha.as_png().expect("Failed to generate captcha image");
+        let image = match captcha.as_png() {
+            Some(image) => image,
+            None => return Err("Failed to generate captcha image".to_string()),
+        };
 
         let id = (Uuid::new_v4().to_string() + &Uuid::new_v4().to_string()).replace("-", "");
 
@@ -50,13 +53,13 @@ impl Captcha {
         let url_id = Uuid::new_v4().to_string();
         let url = format!("{}api/v1/img/{}", config.get("BASE_URL").unwrap(), url_id);
 
-        Self {
-            code,
+        Ok(Self {
             image,
+            code,
             id,
             expire_time,
             url,
-        }
+        })
     }
 
     pub fn expired(&self) -> bool {
